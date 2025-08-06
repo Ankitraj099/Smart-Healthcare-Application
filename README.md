@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Doctors Application - Real Doctors Integration
 
 This application has been updated to display real doctors from the database on the user home page instead of hardcoded placeholder data.
@@ -95,3 +96,7 @@ The sample doctors use a default password hash for 'password123'. In production,
 - Change all doctor passwords
 - Use proper password hashing
 - Implement proper authentication mechanisms 
+=======
+# Smart-Healthcare-Application
+ A comprehensive website for interaction between doctors and users.
+>>>>>>> 9f7e5b069d3ac5c6bfb5fb17b75a54f42c43a9fe
