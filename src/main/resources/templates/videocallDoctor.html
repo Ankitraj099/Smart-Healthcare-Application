@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Medicare - Video Consultation</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8fafc;
+            overflow-x: hidden;
+        }
+        /* Modern Bootstrap Navbar */
+        .navbar {
+            position: fixed;
+            top: 15px;
+            left: 0; right: 0;
+            margin: 0 auto;
+            width: 98vw;
+            background: #fff;
+            border-radius: 2.5rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            transition: all 0.25s cubic-bezier(.4,0,.2,1);
+            z-index: 1000;
+            padding: 0.7rem 1.5rem;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            text-decoration: none;
+        }
+
+        .navbar-brand svg {
+            width: 36px; 
+            height: 36px;
+        }
+
+        .navbar-brand .brand-text {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #3d2176;
+            letter-spacing: 1px;
+        }
+
+        /* Desktop Navigation */
+        .desktop-nav {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            margin-left: auto;
+        }
+
+        .desktop-nav .nav-link {
+            font-size: 1.15rem;
+            color: #2d2250 !important;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.18s;
+            position: relative;
+        }
+
+        .desktop-nav .nav-link:hover, .desktop-nav .nav-link:focus {
+            color: #7c4dff !important;
+        }
+
+        /* Mobile Menu Container */
+        .mobile-menu-container {
+            display: none;
+            position: relative;
+        }
+
+        .navbar-toggler {
+            border: none;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.18s;
+            background: transparent;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
+            background-color: #f8f9fa;
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(61, 33, 118, 0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+            width: 24px;
+            height: 24px;
+            display: block;
+        }
+
+        /* Mobile Dropdown Menu */
+        .mobile-menu-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            padding: 1rem;
+            min-width: 250px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            margin-top: 0.5rem;
+        }
+
+        .mobile-menu-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .mobile-menu-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            text-decoration: none;
+            color: #3d2176;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .mobile-menu-item:hover {
+            background: #f3f0ff;
+            color: #7c4dff;
+            transform: translateX(5px);
+        }
+
+        .mobile-menu-item i {
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 0.5rem 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 991px) {
+            .navbar { 
+                max-width: 98vw; 
+                padding: 0.5rem 1rem; 
+            }
+            
+            .desktop-nav {
+                display: none;
+            }
+            
+            .mobile-menu-container {
+                display: block;
+            }
+        }
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .user-dropdown-btn {
+            background: transparent;
+            color: #3d2176;
+            border: 2px solid #7c4dff;
+            border-radius: 2rem;
+            padding: 0.45rem 1.3rem;
+            font-weight: 600;
+            font-size: 1.08rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.18s;
+        }
+        .user-dropdown-btn:hover {
+            background: #f3f0ff;
+            color: #7c4dff;
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 4px 16px rgba(124,77,255,0.12);
+        }
+        .user-dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #fff;
+            min-width: 250px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            border-radius: 1rem;
+            z-index: 1001;
+            margin-top: 0.5rem;
+            border: 1px solid rgba(0,0,0,0.08);
+        }
+        .user-dropdown-content.show {
+            display: block;
+        }
+        .user-dropdown-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: center;
+        }
+        .user-dropdown-header img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-bottom: 0.5rem;
+        }
+        .user-dropdown-header .user-name {
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.25rem;
+        }
+        .user-dropdown-header .user-email {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+        .user-dropdown-content a {
+            color: #2d3748;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            display: block;
+            transition: background 0.18s;
+            font-weight: 500;
+        }
+        .user-dropdown-content a:hover {
+            background-color: #f7fafc;
+            color: #7c4dff;
+        }
+        .user-dropdown-content .dropdown-divider {
+            margin: 0.5rem 0;
+            border-top: 1px solid #e2e8f0;
+        }
+        @media (max-width: 991px) {
+            .navbar { max-width: 98vw; padding: 0.5rem 1rem; }
+            .navbar-links { gap: 1.2rem; }
+        }
+        @media (max-width: 700px) {
+            .navbar { flex-direction: column; align-items: stretch; }
+            .navbar-links { justify-content: center; margin: 0.5rem 0; }
+            .navbar-actions { justify-content: center; }
+        }
+        /* Video Call Section */
+        .video-section {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 120px;
+            padding-bottom: 40px;
+        }
+        .glassmorphic-video-card {
+            background: rgba(255,255,255,0.85);
+            border-radius: 2rem;
+            box-shadow: 0 8px 32px rgba(124,77,255,0.10);
+            border: 1.5px solid #e2e8f0;
+            padding: 2.5rem 2.5rem 2rem 2.5rem;
+            max-width: 950px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .video-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #3d2176;
+            margin-bottom: 1.2rem;
+            text-align: center;
+        }
+        .video-desc {
+            color: #7c4dff;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        #root {
+            width: 100%;
+            min-height: 500px;
+            background: #fff;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        /* Loading State */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #7c4dff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Footer Styling */
+        .footer {
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 1.5rem 0;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .footer-brand svg {
+            width: 24px;
+            height: 24px;
+        }
+        .footer-brand span {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #7c4dff;
+        }
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        .footer-links a {
+            color: #a0aec0;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+        .footer-links a:hover {
+            color: #7c4dff;
+        }
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+        .footer-social a {
+            color: #a0aec0;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .footer-social a:hover {
+            color: #7c4dff;
+            background: rgba(124, 77, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        @media (max-width: 768px) {
+            .footer-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            .footer-links {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .footer-social {
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Modern Bootstrap Navbar -->
+    <nav class="navbar navbar-expand-lg" id="navbar">
+        <div class="container-fluid">
+            <!-- Brand/Logo -->
+            <a class="navbar-brand" href="/doctor/DoctorHome">
+                <svg viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="20" fill="#7c4dff"/>
+                    <path d="M20 10v20M10 20h20" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+                </svg>
+                <span class="brand-text">medicare</span>
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <div class="navbar-nav desktop-nav">
+                <a href="/doctor/DoctorHome" class="nav-link">Home</a>
+                <a href="/doctor/DoctorAppointments" class="nav-link">Appointments</a>
+                <a href="/doctor/doctorProfile" class="nav-link">Profile</a>
+                
+                <!-- Doctor Dropdown -->
+                <div class="user-dropdown">
+                    <button class="user-dropdown-btn" onclick="toggleUserDropdown()">
+                        <i class="fas fa-user-md"></i>
+                        <span th:text="${doctor != null ? doctor.name : 'Doctor'}">Doctor</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="user-dropdown-content" id="userDropdown">
+                        <div class="user-dropdown-header">
+                            <img th:if="${doctor != null and doctor.email != null}" th:src="@{/doctor/getPhoto(email=${doctor.email})}" alt="Doctor Photo">
+                            <img th:unless="${doctor != null}" src="/static/images/doctor-dp.png" alt="Doctor Photo">
+                            <div class="user-name" th:text="${doctor != null ? doctor.name : 'Doctor'}">Doctor Name</div>
+                            <div class="user-email" th:text="${doctor != null ? doctor.email : 'doctor@email.com'}">doctor@email.com</div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a th:href="@{/doctor/DoctorAppointments}">
+                            <i class="fas fa-calendar-check me-2"></i>Appointments
+                        </a>
+                        <a th:href="@{/doctor/doctorProfile}">
+                            <i class="fas fa-user-edit me-2"></i>View/Update Profile
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a th:href="@{/logout}">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </a>
+                        <div th:if="${session.onlineStatus == 'online'}" class="dropdown-divider"></div>
+                        <a th:if="${session.onlineStatus == 'online'}" th:href="@{/doctor/DoctorOnline(status=offline)}" class="dropdown-item text-danger fw-bold">
+                            <i class="fas fa-circle me-2"></i>Go Offline
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile Dropdown Menu -->
+            <div class="mobile-menu-container">
+                <button class="navbar-toggler" type="button" onclick="toggleMobileMenu()" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="mobile-menu-dropdown" id="mobileMenu">
+                    <div class="mobile-menu-content">
+                        <a href="/doctor/DoctorHome" class="mobile-menu-item">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                        <a href="/doctor/DoctorAppointments" class="mobile-menu-item">
+                            <i class="fas fa-calendar-check"></i> Appointments
+                        </a>
+                        <a href="/doctor/doctorProfile" class="mobile-menu-item">
+                            <i class="fas fa-user-edit"></i> Profile
+                        </a>
+                        <div class="mobile-menu-divider"></div>
+                        <a th:href="@{/logout}" class="mobile-menu-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                        <div th:if="${session.onlineStatus == 'online'}">
+                            <a th:href="@{/doctor/DoctorOnline(status=offline)}" class="mobile-menu-item text-danger">
+                                <i class="fas fa-circle"></i> Go Offline
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Video Call Section -->
+    <section class="video-section">
+        <div class="glassmorphic-video-card">
+            <div class="video-title">
+                <i class="fas fa-video me-2"></i>Live Video Consultation
+            </div>
+            <div class="video-desc">
+                Secure, private, and high-quality video call with your patient.<br>
+                Please allow camera and microphone access when prompted.
+            </div>
+            
+            <!-- Loading Overlay -->
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="loading-spinner"></div>
+            </div>
+            <div id="root"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <svg viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="20" fill="#7c4dff"/>
+                    <path d="M20 10v20M10 20h20" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+                </svg>
+                <span>medicare</span>
+            </div>
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="#">About</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-social">
+                <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mobile menu toggle function
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('show');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuContainer = document.querySelector('.mobile-menu-container');
+            
+            if (mobileMenu && mobileMenu.classList.contains('show')) {
+                if (!mobileMenuContainer.contains(event.target)) {
+                    mobileMenu.classList.remove('show');
+                }
+            }
+        });
+
+        // User dropdown functionality
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+        // Close dropdown when clicking outside
+        window.onclick = function(event) {
+            if (!event.target.matches('.user-dropdown-btn') && !event.target.matches('.user-dropdown-btn *')) {
+                const dropdowns = document.getElementsByClassName('user-dropdown-content');
+                for (let dropdown of dropdowns) {
+                    if (dropdown.classList.contains('show')) {
+                        dropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+        // Hide loading overlay when video call is ready
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').style.display = 'none';
+            }, 2000);
+        });
+    </script>
+    <script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
+    <script th:inline="javascript">
+        const roomID = /*[[${roomID}]]*/ "fallbackRoom";
+        const userName = /*[[${userName}]]*/ "fallbackUser";
+        
+        // ZegoCloud demo configuration (for testing only)
+        const appID = 1150788990; // Demo App ID
+        const serverSecret = "5ccb50aad4f730d1891a82f0aa66b089"; // Demo Server Secret
+        const userID = Math.floor(Math.random() * 10000) + "";
+        
+
+        
+        try {
+            const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID, userID, userName);
+            const zp = ZegoUIKitPrebuilt.create(kitToken);
+            
+            zp.joinRoom({
+                container: document.querySelector("#root"),
+                scenario: {
+                    mode: ZegoUIKitPrebuilt.VideoConference,
+                },
+                turnOnMicrophoneWhenJoining: false,
+                turnOnCameraWhenJoining: false,
+                showMyCameraToggleButton: true,
+                showMyMicrophoneToggleButton: true,
+                showAudioVideoSettingsButton: true,
+                showScreenSharingButton: true,
+                showTextChat: true,
+                showUserList: true,
+                maxUsers: 2,
+                layout: "Auto",
+                showLayoutButton: false,
+            });
+            
+
+        } catch (error) {
+            console.error('Error joining doctor video call:', error);
+            document.getElementById('root').innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: #666;">
+                    <h3>Video Call Connection Error</h3>
+                    <p>Unable to connect to video call service. Please try again.</p>
+                    <p>Error: ${error.message}</p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

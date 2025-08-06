@@ -1,0 +1,1351 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <title>Medicare - Your Health, Our Priority</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            background: #f8fafc;
+        }
+
+        /* Modern Bootstrap Navbar */
+        .navbar {
+            position: fixed;
+            top: 15px;
+            left: 0; right: 0;
+            margin: 0 auto;
+            width: 98vw;
+            background: #fff;
+            border-radius: 2.5rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            transition: all 0.25s cubic-bezier(.4,0,.2,1);
+            z-index: 1000;
+            padding: 0.7rem 1.5rem;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            text-decoration: none;
+        }
+
+        .navbar-brand svg {
+            width: 36px; 
+            height: 36px;
+            transition: width 0.18s, height 0.18s;
+        }
+
+        .navbar-brand .brand-text {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #3d2176;
+            letter-spacing: 1px;
+            transition: font-size 0.18s;
+        }
+
+        /* Desktop Navigation */
+        .desktop-nav {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            margin-left: auto;
+        }
+
+        .desktop-nav .nav-link {
+            font-size: 1.15rem;
+            color: #2d2250 !important;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.18s;
+            position: relative;
+        }
+
+        .desktop-nav .nav-link:hover, .desktop-nav .nav-link:focus {
+            color: #7c4dff !important;
+        }
+
+        /* Mobile Menu Container */
+        .mobile-menu-container {
+            display: none;
+            position: relative;
+        }
+
+        .navbar-toggler {
+            border: none;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.18s;
+            background: transparent;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
+            background-color: #f8f9fa;
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(61, 33, 118, 0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+            width: 24px;
+            height: 24px;
+            display: block;
+        }
+
+        /* Mobile Dropdown Menu */
+        .mobile-menu-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            padding: 1rem;
+            min-width: 250px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            margin-top: 0.5rem;
+        }
+
+        .mobile-menu-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .mobile-menu-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            text-decoration: none;
+            color: #3d2176;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .mobile-menu-item:hover {
+            background: #f3f0ff;
+            color: #7c4dff;
+            transform: translateX(5px);
+        }
+
+        .mobile-menu-item i {
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 0.5rem 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 991px) {
+            .navbar { 
+                max-width: 98vw; 
+                padding: 0.5rem 1rem; 
+            }
+            
+            .desktop-nav {
+                display: none;
+            }
+            
+            .mobile-menu-container {
+                display: block;
+            }
+        }
+        .navbar-btn {
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 1.08rem;
+            padding: 0.45rem 1.3rem;
+            border: none;
+            transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.18s, font-size 0.18s, padding 0.18s;
+            box-shadow: 0 2px 8px rgba(124,77,255,0.08);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+        .navbar-btn-signin {
+            background: transparent;
+            color: #3d2176;
+            border: 2px solid #7c4dff;
+        }
+        .navbar-btn-signin:hover, .navbar-btn-signin:focus {
+            background: #f3f0ff;
+            color: #7c4dff;
+            border-color: #7c4dff;
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 4px 16px rgba(124,77,255,0.12);
+        }
+        .navbar-btn-register {
+            background: #7c4dff;
+            color: #fff;
+            border: 2px solid #7c4dff;
+        }
+        .navbar-btn-register:hover, .navbar-btn-register:focus {
+            background: #5f36d6;
+            color: #fff;
+            border-color: #5f36d6;
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 4px 16px rgba(124,77,255,0.18);
+        }
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .user-dropdown-btn {
+            background: transparent;
+            color: #3d2176;
+            border: 2px solid #7c4dff;
+            border-radius: 2rem;
+            padding: 0.45rem 1.3rem;
+            font-weight: 600;
+            font-size: 1.08rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.18s;
+        }
+        .user-dropdown-btn:hover {
+            background: #f3f0ff;
+            color: #7c4dff;
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 4px 16px rgba(124,77,255,0.12);
+        }
+        .user-dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #fff;
+            min-width: 250px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            border-radius: 1rem;
+            z-index: 1001;
+            margin-top: 0.5rem;
+            border: 1px solid rgba(0,0,0,0.08);
+        }
+        .user-dropdown-content.show {
+            display: block;
+        }
+        .user-dropdown-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: center;
+        }
+        .user-dropdown-header img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-bottom: 0.5rem;
+        }
+        .user-dropdown-header .user-name {
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.25rem;
+        }
+        .user-dropdown-header .user-email {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+        .user-dropdown-content a {
+            color: #2d3748;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            display: block;
+            transition: background 0.18s;
+            font-weight: 500;
+        }
+        .user-dropdown-content a:hover {
+            background-color: #f7fafc;
+            color: #7c4dff;
+        }
+        .user-dropdown-content .dropdown-divider {
+            margin: 0.5rem 0;
+            border-top: 1px solid #e2e8f0;
+        }
+        @media (max-width: 991px) {
+            .navbar { max-width: 98vw; padding: 0.5rem 1rem; }
+            .navbar-links { gap: 1.2rem; }
+        }
+        @media (max-width: 700px) {
+            .navbar { flex-direction: column; align-items: stretch; }
+            .navbar-links { justify-content: center; margin: 0.5rem 0; }
+            .navbar-actions { justify-content: center; }
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 120px 0 80px 0;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://images.pexels.com/photos/4386466/pexels-photo-4386466.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1') center/cover;
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-features {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .hero-feature i {
+            color: #4caf50;
+        }
+
+        .hero-btn {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(76, 175, 80, 0.4);
+            color: white;
+        }
+
+        /* Symptom Checker Section */
+        .symptom-section {
+            background: white;
+            padding: 80px 0;
+            margin-top: 100px;
+        }
+
+        .symptom-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 2rem;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .symptom-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #2d3748;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .symptom-subtitle {
+            font-size: 1.2rem;
+            color: #718096;
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .symptom-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .symptom-input {
+            border: 2px solid #e2e8f0;
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .symptom-input:focus {
+            border-color: #7c4dff;
+            box-shadow: 0 0 0 4px rgba(124, 77, 255, 0.1);
+            outline: none;
+        }
+
+        .symptom-btn {
+            background: linear-gradient(135deg, #7c4dff, #5f36d6);
+            color: white;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            border-radius: 1.5rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(124, 77, 255, 0.3);
+        }
+
+        .symptom-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(124, 77, 255, 0.4);
+            color: white;
+        }
+
+        /* Results Section */
+        .results-section {
+            background: white;
+            padding: 40px 0;
+        }
+
+        .results-card {
+            background: linear-gradient(135deg, #7c4dff 0%, #5f36d6 100%);
+            border-radius: 2rem;
+            padding: 3rem;
+            color: white;
+            box-shadow: 0 20px 60px rgba(124, 77, 255, 0.2);
+        }
+
+        .results-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .result-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .result-item h5 {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Services Section */
+        .services-section {
+            background: #f8fafc;
+            padding: 80px 0;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #2d3748;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.3rem;
+            color: #718096;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 2rem;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #7c4dff, #5f36d6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .service-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 1rem;
+        }
+
+        .service-description {
+            color: #718096;
+            line-height: 1.6;
+        }
+
+        /* Doctors Section */
+        .doctors-section {
+            background: white;
+            padding: 80px 0;
+        }
+
+        .doctor-card {
+            background: white;
+            border-radius: 2rem;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .doctor-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #7c4dff, #5f36d6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+        }
+
+        .doctor-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .doctor-specialty {
+            color: #7c4dff;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .doctor-stats {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            color: white;
+            padding: 80px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #7c4dff;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        /* Testimonials Section */
+        .testimonials-section {
+            background: #f8fafc;
+            padding: 80px 0;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 2rem;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .testimonial-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7c4dff, #5f36d6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+
+        .testimonial-info h5 {
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.25rem;
+        }
+
+        .testimonial-info p {
+            color: #718096;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .testimonial-text {
+            color: #4a5568;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .rating-display {
+            margin-top: 0.5rem;
+        }
+
+        .rating-display .star {
+            font-size: 1rem;
+            margin-right: 0.1rem;
+        }
+
+        .star-filled {
+            color: #ffc107;
+        }
+
+        .star-empty {
+            color: #ddd;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1a202c;
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-brand svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .footer-brand span {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #7c4dff;
+        }
+
+        .footer-description {
+            color: #a0aec0;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h5 {
+            color: white;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: #a0aec0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #7c4dff;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            background: rgba(124, 77, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7c4dff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-social a:hover {
+            background: #7c4dff;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #2d3748;
+            padding-top: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+            color: #a0aec0;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-features {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .stat-number {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+  </head>
+ <body>
+    <!-- Modern Bootstrap Navbar -->
+    <nav class="navbar navbar-expand-lg" id="navbar">
+        <div class="container-fluid">
+            <!-- Brand/Logo -->
+            <a class="navbar-brand" href="/user/UserHome">
+                <svg viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="20" fill="#7c4dff"/>
+                    <path d="M20 10v20M10 20h20" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+                </svg>
+                <span class="brand-text">medicare</span>
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <div class="navbar-nav desktop-nav">
+                <a href="/user/UserHome" class="nav-link">Home</a>
+                <a href="/user/FindDoctor" class="nav-link">Find Doctor</a>
+                <a href="/user/UserAppointments" class="nav-link">Appointments</a>
+                
+                <!-- User Dropdown -->
+                <div class="user-dropdown">
+                    <button class="user-dropdown-btn" onclick="toggleUserDropdown()">
+                        <i class="fas fa-user-circle"></i>
+                        <span th:text="${session.user != null ? session.user.name : 'User'}">User</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="user-dropdown-content" id="userDropdown">
+                        <div class="user-dropdown-header">
+                            <img th:src="@{/user/getPhoto}" alt="User Photo">
+                            <div class="user-name" th:text="${session.user != null ? session.user.name : 'User Name'}">User Name</div>
+                            <div class="user-email" th:text="${session.user != null ? session.user.email : 'user@email.com'}">user@email.com</div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a th:href="@{/user/UserAppointments}">
+                            <i class="fas fa-calendar-check me-2"></i>Appointments
+                        </a>
+                        <a th:href="@{/user/UserProfile}">
+                            <i class="fas fa-user-edit me-2"></i>View/Update Profile
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a th:href="@{/logout}">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile Dropdown Menu -->
+            <div class="mobile-menu-container">
+                <button class="navbar-toggler" type="button" onclick="toggleMobileMenu()" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="mobile-menu-dropdown" id="mobileMenu">
+                    <div class="mobile-menu-content">
+                        <a href="/user/UserHome" class="mobile-menu-item">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                        <a href="/user/FindDoctor" class="mobile-menu-item">
+                            <i class="fas fa-search"></i> Find Doctor
+                        </a>
+                        <a href="/user/UserAppointments" class="mobile-menu-item">
+                            <i class="fas fa-calendar-check"></i> Appointments
+                        </a>
+                        <div class="mobile-menu-divider"></div>
+                        <a href="/user/UserProfile" class="mobile-menu-item">
+                            <i class="fas fa-user-edit"></i> View/Update Profile
+                        </a>
+                        <a th:href="@{/logout}" class="mobile-menu-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Alert Messages -->
+    <div class="container-fluid" style="margin-top: 100px;">
+            <div th:if="${msg!=null}">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <span th:text="${msg}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+			</div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 hero-content">
+                    <h1 class="hero-title">Your Health, Our Priority</h1>
+                    <p class="hero-subtitle">Get expert medical consultation from the comfort of your home. Connect with verified doctors instantly.</p>
+                    <div class="hero-features">
+                        <div class="hero-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Verified Doctors</span>
+                        </div>
+                        <div class="hero-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>24/7 Available</span>
+                        </div>
+                        <div class="hero-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Instant Consultation</span>
+                        </div>
+                    </div>
+                    <button class="hero-btn" data-bs-toggle="modal" data-bs-target="#videoConsultModal">
+                        <i class="fas fa-video me-2"></i>Start Consultation
+                    </button>
+                </div>
+                <div class="col-lg-6">
+                    <img th:src="@{/images/homepage-hero-image-web.png}" alt="Healthcare" class="img-fluid">
+                </div>
+			</div>
+		</div>
+	</section>
+
+    <!-- Symptom Checker Section -->
+    <section class="symptom-section">
+        <div class="container">
+            <div class="symptom-card">
+                <h2 class="symptom-title">Symptom Checker</h2>
+                <p class="symptom-subtitle">Describe your symptoms and get instant medical guidance</p>
+                <form class="symptom-form" th:action="@{/symptomChecker}" method="post">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <input type="text" class="form-control symptom-input" name="symptoms" placeholder="Describe your symptoms (e.g., headache, fever, cough)" required>
+                   </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn symptom-btn w-100">
+                                <i class="fas fa-search me-2"></i>Check Symptoms
+                            </button>
+                  </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <div th:if="${dataSet != null}" class="results-section">
+        <div class="container">
+            <div class="results-card">
+                <h3 class="results-title">Medical Assessment Results</h3>
+                <div class="result-item">
+                    <h5><i class="fas fa-info-circle me-2"></i>Assessment</h5>
+                    <p th:text="${dataSet.message}"></p>
+                </div>
+                <div class="result-item">
+                    <h5><i class="fas fa-lightbulb me-2"></i>Recommendations</h5>
+                    <ul class="mb-0">
+                        <li th:each="r : ${dataSet.recommendations}" th:text="${r}"></li>
+                    </ul>
+                </div>
+                <div class="result-item">
+                    <h5><i class="fas fa-exclamation-triangle me-2"></i>Warnings</h5>
+                    <ul class="mb-0">
+                        <li th:each="r : ${dataSet.warnings}" th:text="${r}"></li>
+                    </ul>
+                </div>
+                <div class="result-item">
+                    <h5><i class="fas fa-user-md me-2"></i>Physician Consultation Required</h5>
+                    <p th:text="${dataSet.requiresPhysicianConsult}"></p>
+                </div>
+                <div class="result-item">
+                    <h5><i class="fas fa-ambulance me-2"></i>Emergency Level</h5>
+                    <p th:text="${dataSet.emergencyLevel}"></p>
+                  </div>
+                <div class="result-item">
+                    <h5><i class="fas fa-stethoscope me-2"></i>Recommended Specialties</h5>
+                    <ul class="mb-0">
+                        <li th:each="r : ${dataSet.topRelatedSpecialties}" th:text="${r}"></li>
+                    </ul>
+                </div>
+              </div>
+        </div>
+    </div>
+
+    <!-- Services Section -->
+    <section class="services-section">
+        <div class="container">
+            <h2 class="section-title">Our Medical Services</h2>
+            <p class="section-subtitle">Comprehensive healthcare solutions for all your medical needs</p>
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6">
+                    <div class="service-card clickable-div">
+                        <div class="service-icon">
+                            <i class="fas fa-tooth"></i>
+                        </div>
+                        <h4 class="service-title">Dentistry</h4>
+                        <p class="service-description">Expert dental care and oral health solutions from certified dentists.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="service-card clickable-div">
+                        <div class="service-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h4 class="service-title">Cardiology</h4>
+                        <p class="service-description">Specialized heart care and cardiovascular health management.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="service-card clickable-div">
+                        <div class="service-icon">
+                            <i class="fas fa-bone"></i>
+                        </div>
+                        <h4 class="service-title">Orthopedics</h4>
+                        <p class="service-description">Bone and joint care, sports medicine, and rehabilitation services.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="service-card clickable-div">
+                        <div class="service-icon">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <h4 class="service-title">General Medicine</h4>
+                        <p class="service-description">Comprehensive primary care and general health consultations.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    <!-- Doctors Section -->
+    <section class="doctors-section">
+        <div class="container">
+            <h2 class="section-title">Meet Our Expert Doctors</h2>
+            <p class="section-subtitle">Experienced healthcare professionals dedicated to your well-being</p>
+            <div class="row g-4">
+                <div th:if="${featuredDoctors == null || featuredDoctors.isEmpty()}" class="col-12 text-center">
+                    <p class="text-muted">No doctors available at the moment.</p>
+                </div>
+                <div th:each="doctorInfo : ${featuredDoctors}" class="col-lg-3 col-md-6">
+                    <div class="doctor-card">
+                        <div class="doctor-avatar">
+                            <img th:src="@{/doctor/getPhoto(email=${doctorInfo.doctor.email})}"
+                                 onerror="this.onerror=null;this.src='/images/doctor-dp.png';"
+                                 alt="Doctor Photo" width="100" height="100" style="object-fit:cover; border-radius:50%;">
+                        </div>
+                        <h4 class="doctor-name" th:text="'Dr. ' + ${doctorInfo.doctor.name}">Dr. Name</h4>
+                        <p class="doctor-specialty" th:text="${doctorInfo.doctor.speciality}">Speciality</p>
+                        <p class="doctor-stats" th:if="${doctorInfo.doctor.doctorDetails != null}" 
+                           th:text="${doctorInfo.doctor.doctorDetails.experience} + ' years experience • ' + ${doctorInfo.consultationCount} + ' consults'">
+                           Experience • Consults
+                        </p>
+                        <p class="doctor-stats" th:if="${doctorInfo.doctor.doctorDetails == null}" 
+                           th:text="${doctorInfo.consultationCount} + ' consults'">
+                           Consults
+                        </p>
+                    </div>
+                </div>
+            </div>
+          </div>
+       </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-item">
+                        <div class="stat-number">2,345+</div>
+                        <div class="stat-label">Happy Patients</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-item">
+                        <div class="stat-number">200+</div>
+                        <div class="stat-label">Verified Doctors</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-item">
+                        <div class="stat-number">27+</div>
+                        <div class="stat-label">Medical Specialties</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Available Support</div>
+            </div>
+            </div>
+            </div>
+        </div>
+       </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section">
+        <div class="container">
+            <h2 class="section-title">What Our Patients Say</h2>
+            <p class="section-subtitle">Real experiences from our satisfied patients</p>
+            <div class="row g-4">
+                <div th:if="${testimonials == null || testimonials.isEmpty()}" class="col-12 text-center">
+                    <p class="text-muted">No testimonials available yet. Be the first to share your experience!</p>
+                </div>
+                <div th:each="testimonial : ${testimonials}" class="col-lg-4 col-md-6">
+                    <div class="testimonial-card">
+                        <div class="testimonial-header">
+                            <div class="testimonial-avatar">
+                                <img th:src="@{/user/getPhoto(email=${testimonial.userEmail})}"
+                                     onerror="this.onerror=null;this.src='/images/person.png';"
+                                     alt="User Photo" width="60" height="60" style="object-fit:cover; border-radius:50%;">
+                            </div>
+                            <div class="testimonial-info">
+                                <h5 th:text="${testimonial.userName}">Patient Name</h5>
+                                <p>Patient</p>
+                                <div class="rating-display">
+                                    <span th:each="i : ${#numbers.sequence(1, 5)}" 
+                                          th:class="${i <= testimonial.rating ? 'star-filled' : 'star-empty'}"
+                                          class="star">★</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="testimonial-text" th:text="${testimonial.comment}">Testimonial text</p>
+                        <small class="text-muted" th:text="${'Dr. ' + testimonial.doctorName}">Doctor Name</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="footer-brand">
+                        <svg viewBox="0 0 40 40" fill="none">
+                            <circle cx="20" cy="20" r="20" fill="#7c4dff"/>
+                            <path d="M20 10v20M10 20h20" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+                        </svg>
+                        <span>medicare</span>
+                    </div>
+                    <p class="footer-description">
+                        Your trusted partner in healthcare. We connect you with verified doctors for convenient, professional medical consultations from the comfort of your home.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-section">
+                        <h5>Services</h5>
+                        <ul class="footer-links">
+                            <li><a href="#">Online Consultation</a></li>
+                            <li><a href="#">Symptom Checker</a></li>
+                            <li><a href="#">Find Doctors</a></li>
+                            <li><a href="#">Book Appointments</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-section">
+                        <h5>Specialties</h5>
+                        <ul class="footer-links">
+                            <li><a href="#">Dentistry</a></li>
+                            <li><a href="#">Cardiology</a></li>
+                            <li><a href="#">Orthopedics</a></li>
+                            <li><a href="#">General Medicine</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-section">
+                        <h5>Support</h5>
+                        <ul class="footer-links">
+                            <li><a href="#">Help Center</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-section">
+                        <h5>Company</h5>
+                        <ul class="footer-links">
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Careers</a></li>
+                            <li><a href="#">Blog</a></li>
+                            <li><a href="#">Press</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Medicare. All rights reserved. | Designed with <i class="fas fa-heart text-danger"></i> for better healthcare</p>
+            </div>
+        </div>
+        </footer>
+        
+    <!-- Video Consultation Modal -->
+      <div class="modal fade" id="videoConsultModal" tabindex="-1" aria-labelledby="videoConsultModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-primary" id="videoConsultModalLabel">
+                        <i class="fas fa-video me-2"></i>Online Video Consultation
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 text-center">
+                            <img th:src="@{/images/video.png}" class="img-fluid" alt="Video Call Animation">
+                        </div>
+                        <div class="col-md-6">
+                            <form th:action="@{/SearchDoctorSpeciality}" method="post">
+                                <div class="mb-3">
+                                    <label for="doctorCategory" class="form-label">
+                                        <i class="fa-solid fa-user-doctor me-2"></i>Select Specialty
+                                    </label>
+		                            <select id="doctorCategory" class="form-select" name="speciality">
+		                                <option value="dentist">Dentist</option>
+		                                <option value="dermatologist">Dermatologist (Skin Specialist)</option>
+		                                <option value="cardiologist">Cardiologist (Heart Specialist)</option>
+		                                <option value="neurologist">Neurologist (Brain and Nervous System)</option>
+		                                <option value="pediatrician">Pediatrician (Child Specialist)</option>
+		                                <option value="orthopedist">Orthopedist (Bone and Joint Specialist)</option>
+		                                <option value="gynecologist">Gynecologist (Women's Health)</option>
+		                                <option value="ent-specialist">ENT Specialist (Ear, Nose, Throat)</option>
+		                                <option value="psychiatrist">Psychiatrist (Mental Health)</option>
+		                                <option value="general-physician">General Physician</option>
+		                                <option value="oncologist">Oncologist (Cancer Specialist)</option>
+		                                <option value="endocrinologist">Endocrinologist (Hormones and Diabetes)</option>
+		                                <option value="gastroenterologist">Gastroenterologist (Digestive System)</option>
+		                            </select>
+                                </div>
+                                <button type="submit" class="btn btn-success w-100">
+                                    <i class="fas fa-search me-2"></i>Find Doctors
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Ensure a stable internet connection for the best video call experience.
+                    </small>
+                </div>
+            </div>
+        </div>
+      </div>
+
+        <script>
+          // Mobile menu toggle function
+          function toggleMobileMenu() {
+              const mobileMenu = document.getElementById('mobileMenu');
+              mobileMenu.classList.toggle('show');
+          }
+
+          // Close mobile menu when clicking outside
+          document.addEventListener('click', function(event) {
+              const mobileMenu = document.getElementById('mobileMenu');
+              const mobileMenuContainer = document.querySelector('.mobile-menu-container');
+              
+              if (mobileMenu && mobileMenu.classList.contains('show')) {
+                  if (!mobileMenuContainer.contains(event.target)) {
+                      mobileMenu.classList.remove('show');
+                  }
+              }
+          });
+
+          // Get all div elements with the class 'clickable-div'
+          const clickableDivs = document.querySelectorAll('.clickable-div');
+      
+          // Add a click event listener to each div
+          clickableDivs.forEach(div => {
+              div.addEventListener('click', () => {
+                // Redirect to the FindDoctor page
+                window.location.href = 'FindDoctor';
+              });
+          });
+
+        // User dropdown functionality
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        window.onclick = function(event) {
+            if (!event.target.matches('.user-dropdown-btn') && !event.target.matches('.user-dropdown-btn *')) {
+                const dropdowns = document.getElementsByClassName('user-dropdown-content');
+                for (let dropdown of dropdowns) {
+                    if (dropdown.classList.contains('show')) {
+                        dropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        // Typing animation for symptom results
+        document.addEventListener("DOMContentLoaded", function () {
+            const spans = Array.from(document.querySelectorAll("#typing span"));
+            let currentIndex = 0;
+
+            function typeText(span, text, callback) {
+                let i = 0;
+                span.textContent = "";
+                span.style.visibility = "visible";
+
+                function type() {
+                    if (i < text.length) {
+                        span.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(type, 25);
+                    } else {
+                        if (callback) callback();
+                    }
+                }
+
+                type();
+            }
+
+            function typeNextSpan() {
+                if (currentIndex >= spans.length) return;
+
+                const span = spans[currentIndex];
+                const originalText = span.textContent;
+                typeText(span, originalText, () => {
+                    currentIndex++;
+                    typeNextSpan();
+                });
+            }
+
+            typeNextSpan();
+          });
+      </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+   </body>
+</html>

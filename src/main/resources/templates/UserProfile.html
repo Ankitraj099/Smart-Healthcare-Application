@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicare - User Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            background: #f8fafc;
+        }
+
+        /* Modern Navbar */
+        .navbar {
+            position: fixed;
+            top: 15px;
+            left: 0; right: 0;
+            margin: 0 auto;
+            width: 98vw;
+            background: #fff;
+            border-radius: 2.5rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.7rem 1.5rem;
+            transition: all 0.25s cubic-bezier(.4,0,.2,1);
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            text-decoration: none;
+        }
+
+        .navbar-brand svg {
+            width: 36px; 
+            height: 36px;
+        }
+
+        .navbar-brand .brand-text {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #3d2176;
+            letter-spacing: 1px;
+        }
+
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .user-dropdown-btn {
+            background: transparent;
+            color: #3d2176;
+            border: 2px solid #7c4dff;
+            border-radius: 2rem;
+            padding: 0.45rem 1.3rem;
+            font-weight: 600;
+            font-size: 1.08rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.18s;
+        }
+        .user-dropdown-btn:hover {
+            background: #f3f0ff;
+            color: #7c4dff;
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 4px 16px rgba(124,77,255,0.12);
+        }
+        .user-dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #fff;
+            min-width: 250px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            border-radius: 1rem;
+            z-index: 1001;
+            margin-top: 0.5rem;
+            border: 1px solid rgba(0,0,0,0.08);
+        }
+        .user-dropdown-content.show {
+            display: block;
+        }
+        .user-dropdown-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: center;
+        }
+        .user-dropdown-header img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-bottom: 0.5rem;
+        }
+        .user-dropdown-header .user-name {
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 0.25rem;
+        }
+        .user-dropdown-header .user-email {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+        .user-dropdown-content a {
+            color: #2d3748;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            display: block;
+            transition: background 0.18s;
+            font-weight: 500;
+        }
+        .user-dropdown-content a:hover {
+            background-color: #f7fafc;
+            color: #7c4dff;
+        }
+        .user-dropdown-content .dropdown-divider {
+            margin: 0.5rem 0;
+            border-top: 1px solid #e2e8f0;
+        }
+        /* Desktop Navigation */
+        .desktop-nav {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            margin-left: auto;
+        }
+        
+        .desktop-nav .nav-link {
+            font-size: 1.15rem;
+            color: #2d2250 !important;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.18s;
+            position: relative;
+        }
+        
+        .desktop-nav .nav-link:hover, .desktop-nav .nav-link:focus {
+            color: #7c4dff !important;
+        }
+        
+        /* Mobile Menu Container */
+        .mobile-menu-container {
+            display: none;
+            position: relative;
+        }
+        
+        .navbar-toggler {
+            border: none;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.18s;
+            background: transparent;
+        }
+        
+        .navbar-toggler:focus {
+            box-shadow: none;
+            background-color: #f8f9fa;
+        }
+        
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(61, 33, 118, 0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+            width: 24px;
+            height: 24px;
+            display: block;
+        }
+        
+        /* Mobile Dropdown Menu */
+        .mobile-menu-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            padding: 1rem;
+            min-width: 250px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            margin-top: 0.5rem;
+        }
+        
+        .mobile-menu-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .mobile-menu-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .mobile-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            text-decoration: none;
+            color: #3d2176;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
+        }
+        
+        .mobile-menu-item:hover {
+            background: #f3f0ff;
+            color: #7c4dff;
+            transform: translateX(5px);
+        }
+        
+        .mobile-menu-item i {
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .mobile-menu-divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 0.5rem 0;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 991px) {
+            .navbar { 
+                max-width: 98vw; 
+                padding: 0.5rem 1rem; 
+            }
+            
+            .desktop-nav {
+                display: none;
+            }
+            
+            .mobile-menu-container {
+                display: block;
+            }
+        }
+
+        /* Profile Section */
+        .profile-section {
+            background: white;
+            padding: 120px 0 80px 0;
+            margin-top: 100px;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .profile-title {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #2d3748;
+            margin-bottom: 1rem;
+        }
+
+        .profile-subtitle {
+            font-size: 1.2rem;
+            color: #718096;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 2rem;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.12);
+        }
+
+        .profile-photo-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .profile-photo {
+            width: 180px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 50%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            border: 4px solid #7c4dff;
+        }
+
+        .profile-photo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 50px rgba(124, 77, 255, 0.3);
+        }
+
+        .photo-upload-form {
+            margin-top: 2rem;
+        }
+
+        .photo-upload-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .select-photo-btn {
+            position: relative;
+            background: #f8f9fa;
+            color: #7c4dff;
+            border: 2px solid #e9ecef;
+            padding: 1rem 2rem;
+            border-radius: 1.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .select-photo-btn:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .select-photo-btn input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .update-photo-btn {
+            background: linear-gradient(135deg, #7c4dff, #5f36d6);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 1.5rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(124, 77, 255, 0.3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .update-photo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(124, 77, 255, 0.4);
+            color: white;
+        }
+
+        .profile-info-section {
+            margin-bottom: 3rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #718096;
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-value {
+            color: #2d3748;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #7c4dff, #5f36d6);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 1.5rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(124, 77, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(124, 77, 255, 0.4);
+            color: white;
+        }
+
+        .action-btn-secondary {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+        }
+
+        .action-btn-secondary:hover {
+            box-shadow: 0 12px 35px rgba(76, 175, 80, 0.4);
+        }
+
+        /* Modal Styling */
+        .modal-content {
+            border-radius: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            border: none;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 2rem 2rem 1rem;
+        }
+
+        .modal-title {
+            font-weight: 700;
+            color: #2d3748;
+            font-size: 1.5rem;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #7c4dff;
+            box-shadow: 0 0 0 4px rgba(124, 77, 255, 0.1);
+            outline: none;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-btn {
+            background: linear-gradient(135deg, #7c4dff, #5f36d6);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(124, 77, 255, 0.3);
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(124, 77, 255, 0.4);
+            color: white;
+        }
+
+        /* Alert Styling */
+        .alert {
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Footer Styling (EXACT match to login-signup.html) */
+        .footer {
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 1.5rem 0;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .footer-brand svg {
+            width: 24px;
+            height: 24px;
+        }
+        .footer-brand span {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #7c4dff;
+        }
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        .footer-links a {
+            color: #a0aec0;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+        .footer-links a:hover {
+            color: #7c4dff;
+        }
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+        .footer-social a {
+            color: #a0aec0;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .footer-social a:hover {
+            color: #7c4dff;
+            background: rgba(124, 77, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        @media (max-width: 768px) {
+            .footer-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            .footer-links {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .footer-social {
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Modern Bootstrap Navbar -->
+    <nav class="navbar navbar-expand-lg" id="navbar">
+        <div class="container-fluid">
+            <!-- Brand/Logo -->
+            <a class="navbar-brand" href="/user/UserHome">
+                <svg viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="20" fill="#7c4dff"/>
+                    <path d="M20 10v20M10 20h20" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+                </svg>
+                <span class="brand-text">medicare</span>
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <div class="navbar-nav desktop-nav">
+                <a href="/user/UserHome" class="nav-link">Home</a>
+                <a href="/user/FindDoctor" class="nav-link">Find Doctor</a>
+                <a href="/user/UserAppointments" class="nav-link">Appointments</a>
+                
+                <!-- User Dropdown -->
+                <div class="user-dropdown">
+                    <button class="user-dropdown-btn" onclick="toggleUserDropdown()">
+                        <i class="fas fa-user-circle"></i>
+                        <span th:text="${session.user.name}">User</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="user-dropdown-content" id="userDropdown">
+                        <div class="user-dropdown-header">
+                            <img th:src="@{/user/getPhoto}" alt="User Photo">
+                            <div class="user-name" th:text="${session.user.name}">User Name</div>
+                            <div class="user-email" th:text="${session.user.email}">user@email.com</div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a th:href="@{/user/UserAppointments}">
+                            <i class="fas fa-calendar-check me-2"></i>Appointments
+                        </a>
+                        <a th:href="@{/user/UserProfile}">
+                            <i class="fas fa-user-edit me-2"></i>View/Update Profile
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a th:href="@{/logout}">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile Dropdown Menu -->
+            <div class="mobile-menu-container">
+                <button class="navbar-toggler" type="button" onclick="toggleMobileMenu()" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="mobile-menu-dropdown" id="mobileMenu">
+                    <div class="mobile-menu-content">
+                        <a href="/user/UserHome" class="mobile-menu-item">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                        <a href="/user/FindDoctor" class="mobile-menu-item">
+                            <i class="fas fa-search"></i> Find Doctor
+                        </a>
+                        <a href="/user/UserAppointments" class="mobile-menu-item">
+                            <i class="fas fa-calendar-check"></i> Appointments
+                        </a>
+                        <div class="mobile-menu-divider"></div>
+                        <a href="/user/UserProfile" class="mobile-menu-item">
+                            <i class="fas fa-user-edit"></i> View/Update Profile
+                        </a>
+                        <a th:href="@{/logout}" class="mobile-menu-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid" style="margin-top: 110px;"></div>
+    
+    <!-- Profile Section -->
+    <section class="profile-section">
+        <div class="container">
+            <div class="profile-header">
+                <h1 class="profile-title" th:text="${session.user.name}">User</h1>
+                <p class="profile-subtitle">Manage your personal information and account settings</p>
+            </div>
+
+            <!-- Alert Messages -->
+            <div th:if="${msg!=null}" class="alert alert-warning alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <span th:text="${msg}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="profile-card">
+                        <!-- Profile Photo Section -->
+                        <div class="profile-photo-section">
+                            <img th:src="@{/user/getPhoto}" class="profile-photo mb-4" alt="Profile Photo">
+                            <h3 class="h4 mb-4">Update Profile Photo</h3>
+                            <form th:action="@{/user/updatePhoto}" enctype="multipart/form-data" method="post" class="photo-upload-form">
+                                <div class="photo-upload-buttons">
+                                    <div class="select-photo-btn">
+                                        <i class="fas fa-camera"></i>
+                                        <span>Select New Photo</span>
+                                        <input name="photo" type="file" id="formFile" accept="image/*" required>
+                                    </div>
+                                    <button type="submit" class="update-photo-btn">
+                                        <i class="fas fa-upload"></i>
+                                        <span>Update Photo</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Profile Information Section -->
+                        <div class="profile-info-section">
+                            <h3 class="h4 mb-4 text-center">Personal Information</h3>
+                            <div class="info-grid">
+                                <div class="info-card">
+                                    <div class="info-item">
+                                        <span class="info-label">
+                                            <i class="fas fa-user"></i>Name
+                                        </span>
+                                        <span class="info-value" th:text="${session.user.name}"></span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">
+                                            <i class="fas fa-envelope"></i>Email
+                                        </span>
+                                        <span class="info-value" th:text="${session.user.email}"></span>
+                                    </div>
+                                </div>
+                                <div class="info-card">
+                                    <div class="info-item">
+                                        <span class="info-label">
+                                            <i class="fas fa-phone"></i>Phone
+                                        </span>
+                                        <span class="info-value" th:text="${session.user.phone}"></span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">
+                                            <i class="fas fa-calendar-alt"></i>Date of Birth
+                                        </span>
+                                        <span class="info-value" th:text="${#dates.format(session.user.dob, 'dd MMM yyyy')}"></span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">
+                                            <i class="fas fa-venus-mars"></i>Gender
+                                        </span>
+                                        <span class="info-value" th:text="${session.user.gender}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="action-buttons">
+                            <button type="button" class="action-btn" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                                <i class="fas fa-edit"></i>Edit Profile
+                            </button>
+                            <button type="button" class="action-btn action-btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                <i class="fas fa-key"></i>Update Password
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal fade" id="editProfileModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-user-edit me-2"></i>Edit Profile
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/user/updateUser}" method="post">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">
+                                        <i class="fas fa-user me-2"></i>Full Name
+                                    </label>
+                                    <input type="text" class="form-control" id="name" name="name" th:value="${session.user.name}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">
+                                        <i class="fas fa-envelope me-2"></i>Email Address
+                                    </label>
+                                    <input type="email" class="form-control" id="email" name="email" th:value="${session.user.email}" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">
+                                        <i class="fas fa-phone me-2"></i>Phone Number
+                                    </label>
+                                    <input type="text" class="form-control" id="phone" name="phone" maxlength="10" minlength="10" th:value="${session.user.phone}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="dob" class="form-label">
+                                        <i class="fas fa-calendar-alt me-2"></i>Date of Birth
+                                    </label>
+                                    <input type="date" class="form-control" id="dob" name="dob" th:value="${session.user.dob}" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="gender" class="form-label">
+                                <i class="fas fa-venus-mars me-2"></i>Gender
+                            </label>
+                            <select class="form-select" id="gender" name="gender">
+                                <option th:selected="${session.user.gender == 'Male'}" value="Male">Male</option>
+                                <option th:selected="${session.user.gender == 'Female'}" value="Female">Female</option>
+                                <option th:selected="${session.user.gender == 'Other'}" value="Other">Other</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="modal-btn w-100">
+                            <i class="fas fa-save me-2"></i>Save Changes
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Password Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-key me-2"></i>Update Password
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/user/updatePassword}" method="post">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">
+                                <i class="fas fa-envelope me-2"></i>Email Address
+                            </label>
+                            <input type="email" class="form-control" id="email" name="email" th:value="${session.user.email}" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="oldPassword" class="form-label">
+                                <i class="fas fa-lock me-2"></i>Current Password
+                            </label>
+                            <input type="password" class="form-control" id="oldPassword" name="oldpassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">
+                                <i class="fas fa-key me-2"></i>New Password
+                            </label>
+                            <input type="password" class="form-control" id="newPassword" name="newpassword" required>
+                        </div>
+                        <button type="submit" class="modal-btn w-100">
+                            <i class="fas fa-save me-2"></i>Update Password
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <svg viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="20" fill="#7c4dff"/>
+                    <path d="M20 10v20M10 20h20" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+                </svg>
+                <span>medicare</span>
+            </div>
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="#">About</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-social">
+                <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // User dropdown functionality
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        window.onclick = function(event) {
+            if (!event.target.matches('.user-dropdown-btn') && !event.target.matches('.user-dropdown-btn *')) {
+                const dropdowns = document.getElementsByClassName('user-dropdown-content');
+                for (let dropdown of dropdowns) {
+                    if (dropdown.classList.contains('show')) {
+                        dropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        // Mobile menu toggle function
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('show');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuContainer = document.querySelector('.mobile-menu-container');
+            
+            if (mobileMenu && mobileMenu.classList.contains('show')) {
+                if (!mobileMenuContainer.contains(event.target)) {
+                    mobileMenu.classList.remove('show');
+                }
+            }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

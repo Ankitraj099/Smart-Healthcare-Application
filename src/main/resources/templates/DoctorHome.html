@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctors</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; overflow-x: hidden; background: #f8fafc; }
+        /* Modern Bootstrap Navbar */
+.navbar { 
+    position: fixed; 
+    top: 15px; 
+    left: 0; right: 0; 
+    margin: 0 auto; 
+    width: 98vw; 
+    background: #fff; 
+    border-radius: 2.5rem; 
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08); 
+    transition: all 0.25s cubic-bezier(.4,0,.2,1); 
+    z-index: 1000; 
+    padding: 0.7rem 1.5rem; 
+}
+
+.navbar-brand { 
+    display: flex; 
+    align-items: center; 
+    gap: 0.7rem; 
+    text-decoration: none; 
+}
+
+.navbar-brand svg { 
+    width: 36px; 
+    height: 36px; 
+    transition: width 0.18s, height 0.18s; 
+}
+
+.navbar-brand .brand-text { 
+    font-size: 1.7rem; 
+    font-weight: 700; 
+    color: #3d2176; 
+    letter-spacing: 1px; 
+    transition: font-size 0.18s; 
+}
+
+/* Desktop Navigation */
+.desktop-nav { 
+    display: flex; 
+    align-items: center; 
+    gap: 1.2rem; 
+    margin-left: auto; 
+}
+
+.desktop-nav .nav-link { 
+    font-size: 1.15rem; 
+    color: #2d2250 !important; 
+    text-decoration: none; 
+    font-weight: 500; 
+    transition: color 0.18s; 
+    position: relative; 
+}
+
+.desktop-nav .nav-link:hover, .desktop-nav .nav-link:focus { 
+    color: #7c4dff !important; 
+}
+
+/* Mobile Menu Container */
+.mobile-menu-container {
+    display: none;
+    position: relative;
+}
+
+.navbar-toggler {
+    border: none;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.18s;
+    background: transparent;
+}
+
+.navbar-toggler:focus {
+    box-shadow: none;
+    background-color: #f8f9fa;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(61, 33, 118, 0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    width: 24px;
+    height: 24px;
+    display: block;
+}
+
+/* Mobile Dropdown Menu */
+.mobile-menu-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    padding: 1rem;
+    min-width: 250px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1001;
+    margin-top: 0.5rem;
+}
+
+.mobile-menu-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.mobile-menu-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.mobile-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    color: #3d2176;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+}
+
+.mobile-menu-item:hover {
+    background: #f3f0ff;
+    color: #7c4dff;
+    transform: translateX(5px);
+}
+
+.mobile-menu-item i {
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+}
+
+.mobile-menu-divider {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 0.5rem 0;
+}
+
+/* Responsive Design */
+@media (max-width: 991px) {
+    .navbar { 
+        max-width: 98vw; 
+        padding: 0.5rem 1rem; 
+    }
+    
+    .desktop-nav {
+        display: none;
+    }
+    
+    .mobile-menu-container {
+        display: block;
+    }
+}
+        .user-dropdown { position: relative; display: inline-block; }
+        .user-dropdown-btn { background: transparent; color: #3d2176; border: 2px solid #7c4dff; border-radius: 2rem; padding: 0.45rem 1.3rem; font-weight: 600; font-size: 1.08rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: all 0.18s; }
+        .user-dropdown-btn:hover { background: #f3f0ff; color: #7c4dff; transform: translateY(-2px) scale(1.04); box-shadow: 0 4px 16px rgba(124,77,255,0.12); }
+        .user-dropdown-content { display: none; position: absolute; right: 0; background-color: #fff; min-width: 250px; box-shadow: 0 8px 32px rgba(0,0,0,0.12); border-radius: 1rem; z-index: 1001; margin-top: 0.5rem; border: 1px solid rgba(0,0,0,0.08); }
+        .user-dropdown-content.show { display: block; }
+        .user-dropdown-header { padding: 1rem; border-bottom: 1px solid #e2e8f0; text-align: center; }
+        .user-dropdown-header img { width: 50px; height: 50px; border-radius: 50%; margin-bottom: 0.5rem; }
+        .user-dropdown-header .user-name { font-weight: 700; color: #2d3748; margin-bottom: 0.25rem; }
+        .user-dropdown-header .user-email { font-size: 0.9rem; color: #718096; }
+        .user-dropdown-content a { color: #2d3748; padding: 0.75rem 1rem; text-decoration: none; display: block; transition: background 0.18s; font-weight: 500; }
+        .user-dropdown-content a:hover { background-color: #f7fafc; color: #7c4dff; }
+        .user-dropdown-content .dropdown-divider { margin: 0.5rem 0; border-top: 1px solid #e2e8f0; }
+        @media (max-width: 991px) { .navbar { max-width: 98vw; padding: 0.5rem 1rem; } .navbar-links { gap: 1.2rem; } }
+        @media (max-width: 700px) { .navbar { flex-direction: column; align-items: stretch; } .navbar-links { justify-content: center; margin: 0.5rem 0; } .navbar-actions { justify-content: center; } }
+        /* Footer */
+        .footer { background: #1a202c; color: white; padding: 60px 0 30px; }
+        .footer-brand { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; }
+        .footer-brand svg { width: 32px; height: 32px; }
+        .footer-brand span { font-weight: 700; font-size: 1.5rem; color: #7c4dff; }
+        .footer-description { color: #a0aec0; line-height: 1.6; margin-bottom: 2rem; }
+        .footer-section h5 { color: white; font-weight: 700; margin-bottom: 1.5rem; }
+        .footer-links { list-style: none; padding: 0; }
+        .footer-links li { margin-bottom: 0.75rem; }
+        .footer-links a { color: #a0aec0; text-decoration: none; transition: color 0.3s ease; }
+        .footer-links a:hover { color: #7c4dff; }
+        .footer-social { display: flex; gap: 1rem; margin-top: 1rem; }
+        .footer-social a { width: 40px; height: 40px; background: rgba(124, 77, 255, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #7c4dff; text-decoration: none; transition: all 0.3s ease; }
+        .footer-social a:hover { background: #7c4dff; color: white; transform: translateY(-2px); }
+        .footer-bottom { border-top: 1px solid #2d3748; padding-top: 2rem; margin-top: 3rem; text-align: center; color: #a0aec0; }
+        @media (max-width: 768px) { .footer .row.g-4 { flex-direction: column; gap: 2rem; } .footer-section { margin-bottom: 1.5rem; } }
+       body{
+        overflow-x: hidden;
+       }
+        .sidebar {
+            background-color: rgba(215, 221, 227);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            z-index: 100;
+            /* height: 100vh; */
+        }
+        .content-area {
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .btn-custom {
+            margin-top: 10px;
+        }
+        .modern-form-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 2rem;
+            border: 1px solid #e2e8f0;
+        }
+        .form-title {
+            font-weight: 800;
+            color: #7c4dff;
+            letter-spacing: 0.5px;
+        }
+        .btn-gradient-pill {
+            background: linear-gradient(135deg, #7c4dff, #5f36d6);
+            color: #fff;
+            border-radius: 2rem;
+            font-weight: 700;
+            border: none;
+            transition: all 0.2s;
+            box-shadow: 0 4px 16px rgba(124,77,255,0.10);
+        }
+        .btn-gradient-pill:hover {
+            background: linear-gradient(135deg, #5f36d6, #7c4dff);
+            color: #fff;
+            transform: translateY(-2px) scale(1.04);
+        }
+        .input-group-text {
+            background: #f3f0ff;
+            border: none;
+            color: #7c4dff;
+        }
+        .form-control:focus {
+            border-color: #7c4dff;
+            box-shadow: 0 0 0 2px rgba(124,77,255,0.10);
+        }
+        .sidebar-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+        .sidebar-btn {
+            width: 100%;
+            padding: 0.9rem 1.5rem;
+            border: none;
+            border-radius: 2rem;
+            background: linear-gradient(90deg, #7c4dff 0%, #5f36d6 100%);
+            color: #fff;
+            font-size: 1.13rem;
+            font-weight: 600;
+            box-shadow: 0 2px 12px rgba(124,77,255,0.10);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0.7rem;
+            transition: background 0.18s, box-shadow 0.18s, transform 0.13s;
+            cursor: pointer;
+            outline: none;
+        }
+        .sidebar-btn:hover, .sidebar-btn:focus {
+            background: linear-gradient(90deg, #5f36d6 0%, #7c4dff 100%);
+            box-shadow: 0 4px 18px rgba(124,77,255,0.18);
+            transform: translateY(-2px) scale(1.03);
+            color: #fff;
+        }
+        @media (max-width: 991px) {
+            .sidebar-btn { font-size: 1rem; padding: 0.8rem 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Modern Bootstrap Navbar for Doctor -->
+    <nav class="navbar navbar-expand-lg" id="navbar">
+        <div class="container-fluid">
+            <!-- Brand/Logo -->
+            <a class="navbar-brand" href="/doctor/DoctorHome">
+                <svg viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="20" fill="#7c4dff"/>
+                    <path d="M20 10v20M10 20h20" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+                </svg>
+                <span class="brand-text">medicare</span>
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <div class="navbar-nav desktop-nav">
+                <a href="/doctor/DoctorHome" class="nav-link">Home</a>
+                <a href="/doctor/DoctorAppointments" class="nav-link">Appointments</a>
+                
+                <!-- Doctor Dropdown -->
+                <div class="user-dropdown">
+                    <button class="user-dropdown-btn" onclick="toggleUserDropdown()">
+                        <i class="fas fa-user-circle"></i>
+                        <span th:text="${session.doctor != null ? session.doctor.name : 'Doctor'}">Doctor</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="user-dropdown-content" id="userDropdown">
+                        <div class="user-dropdown-header">
+                            <img th:src="@{/doctor/getPhoto(email=${session.doctor != null ? session.doctor.email : ''})}" alt="Doctor Photo">
+                            <div class="user-name" th:text="${session.doctor != null ? session.doctor.name : 'Doctor Name'}">Doctor Name</div>
+                            <div class="user-email" th:text="${session.doctor != null ? session.doctor.email : 'doctor@email.com'}">doctor@email.com</div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a th:href="@{/doctor/DoctorAppointments}">
+                            <i class="fas fa-calendar-check me-2"></i>Appointments
+                        </a>
+                        <a th:href="@{/doctor/doctorProfile}">
+                            <i class="fas fa-user-edit me-2"></i>View/Update Profile
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <div th:if="${session.onlineStatus=='offline'}">
+                            <a target="_blank" class="" th:href="@{/doctor/DoctorOnline(status=online)}">
+                                <i class="fas fa-circle text-success me-2"></i>Go Online
+                            </a>
+                        </div>
+                        <div th:if="${session.onlineStatus=='online'}">
+                            <a class="" th:href="@{/doctor/DoctorOnline(status=offline)}">
+                                <i class="fas fa-circle text-danger me-2"></i>Go Offline
+                            </a>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a th:href="@{/logout}">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile Dropdown Menu -->
+            <div class="mobile-menu-container">
+                <button class="navbar-toggler" type="button" onclick="toggleMobileMenu()" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="mobile-menu-dropdown" id="mobileMenu">
+                    <div class="mobile-menu-content">
+                        <a href="/doctor/DoctorHome" class="mobile-menu-item">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                        <a href="/doctor/DoctorAppointments" class="mobile-menu-item">
+                            <i class="fas fa-calendar-check"></i> Appointments
+                        </a>
+                        <div class="mobile-menu-divider"></div>
+                        <a href="/doctor/doctorProfile" class="mobile-menu-item">
+                            <i class="fas fa-user-edit"></i> View/Update Profile
+                        </a>
+                        <div th:if="${session.onlineStatus=='offline'}">
+                            <a target="_blank" class="mobile-menu-item" th:href="@{/doctor/DoctorOnline(status=online)}">
+                                <i class="fas fa-circle text-success"></i> Go Online
+                            </a>
+                        </div>
+                        <div th:if="${session.onlineStatus=='online'}">
+                            <a class="mobile-menu-item" th:href="@{/doctor/DoctorOnline(status=offline)}">
+                                <i class="fas fa-circle text-danger"></i> Go Offline
+                            </a>
+                        </div>
+                        <div class="mobile-menu-divider"></div>
+                        <a th:href="@{/logout}" class="mobile-menu-item">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Hero Image -->
+    <div class="d-flex justify-content-center align-items-center" style="margin-top: 90px; width: 100vw;">
+        <img src="https://images.pexels.com/photos/7578803/pexels-photo-7578803.jpeg" alt="Doctor Team Hero" class="rounded-4 shadow-lg mb-4" style="width:95vw; height:80vh; object-fit:cover; object-position:center; max-width:1800px;">
+    </div>
+    <div class="container-fluid" style="margin-top: 110px;">
+            <div th:if="${msg!=null}">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <span th:text="${msg}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+     <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 h-100 p-5 sticky-top sidebar">
+            <!-- Doctor Image and Name -->
+            <div class="text-center">
+                <img th:src="@{/doctor/getPhoto(email=${session.doctor.email})}" width="100px">
+                <h4>Dr. <span style='color:red;' th:text="${session.doctor.name}"></span></h4> 
+            </div>
+            <!-- Navigation Buttons -->
+                <div class="mt-4 sidebar-buttons">
+                    <button class="sidebar-btn" onclick="showForm('doctorDetail')">
+                        <i class="fas fa-user-md me-2"></i>Doctor Detail
+                    </button>
+                    <button class="sidebar-btn" onclick="showForm('doctorAvailable')">
+                        <i class="fas fa-calendar-check me-2"></i>Doctor Available
+                    </button>
+                    <button class="sidebar-btn" onclick="showForm('doctorNotAvailable')">
+                        <i class="fas fa-calendar-times me-2"></i>Doctor Not Available
+                    </button>
+                </div>
+            </div>
+        <!-- Content Area -->
+        <div class="col-md-9 content-area ml-sm-auto" >
+            <div id="content-area m-4 p-2">
+                <!-- Doctor Detail Form -->
+                <div id="doctorDetail" class="form-section" style="display: default;">
+                        <div class="card modern-form-card shadow-lg p-4 mb-4">
+                            <h2 class="form-title mb-3">Doctor Detail</h2>
+                            <form method="post" th:action="@{/doctor/updateDoctor}">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="name" class="form-label">Name</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                            <input type="text" th:value="${session.doctor.name}" class="form-control rounded-pill" id="name" name="name" placeholder="Enter name" required readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="phone" class="form-label">Phone</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                            <input type="text" th:value="${session.doctor.doctorDetails.phone}" class="form-control rounded-pill" maxlength="10" minlength="10" pattern="\d{10}" id="phone" name="phone" placeholder="Enter phone number" required>
+                                        </div>
+                        </div>
+                                    <div class="col-md-6">
+                                        <label for="dob" class="form-label">Date of Birth</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                            <input type="date" th:value="${session.doctor.doctorDetails.dob}" class="form-control rounded-pill" id="dob" name="dob" required>
+                        </div>
+                        </div>
+                                    <div class="col-md-6">
+                                        <label for="speciality" class="form-label">Speciality</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-user-md"></i></span>
+                                            <select id="doctorCategory" class="form-select rounded-pill" name="speciality">
+                                <option th:value="${session.doctor.speciality}"><span th:text="${session.doctor.speciality}"></span></option>
+                                <option value="Dentist">Dentist</option>
+                                <option value="Dermatologist">Dermatologist (Skin Specialist)</option>
+                                <option value="Cardiologist">Cardiologist (Heart Specialist)</option>
+                                <option value="Neurologist">Neurologist (Brain and Nervous System)</option>
+                                <option value="Pediatrician">Pediatrician (Child Specialist)</option>
+                                <option value="Orthopedist">Orthopedist (Bone and Joint Specialist)</option>
+                                <option value="Gynecologist">Gynecologist (Women's Health)</option>
+                                <option value="Ent-Specialist">ENT Specialist (Ear, Nose, Throat)</option>
+                                <option value="Psychiatrist">Psychiatrist (Mental Health)</option>
+                                <option value="General-Physician">General Physician</option>
+                                <option value="Oncologist">Oncologist (Cancer Specialist)</option>
+                                <option value="Endocrinologist">Endocrinologist (Hormones and Diabetes)</option>
+                                <option value="Gastroenterologist">Gastroenterologist (Digestive System)</option>
+                            </select>
+                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="qualification" class="form-label">Qualification</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-graduation-cap"></i></span>
+                                            <input type="text" th:value="${session.doctor.doctorDetails.qualification}" class="form-control rounded-pill" id="qualification" name="qualification" placeholder="Enter qualification" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="experience" class="form-label">Experience (years)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
+                                            <input type="number" th:value="${session.doctor.doctorDetails.experience}" class="form-control rounded-pill" id="experience" name="experience" min="0" placeholder="Enter years of experience" required>
+                        </div>
+                        </div>
+                                    <div class="col-md-6">
+                                        <label for="gender" class="form-label">Gender</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
+                                            <select class="form-control rounded-pill" id="gender" name="gender" required>
+                                                <option th:value="${session.doctor.doctorDetails.gender}"><span th:text="${session.doctor.doctorDetails.gender}"></span></option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="state" class="form-label">State</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                            <input type="text" th:value="${session.doctor.state}" class="form-control rounded-pill" id="state" name="state" placeholder="Enter state" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="city" class="form-label">City</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-city"></i></span>
+                                            <input type="text" th:value="${session.doctor.city}" class="form-control rounded-pill" id="city" name="city" placeholder="Enter city" required>
+                                        </div>
+                        </div>
+                                    <div class="col-md-6">
+                                        <label for="area" class="form-label">Area</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-location-dot"></i></span>
+                                            <input type="text" th:value="${session.doctor.area}" class="form-control rounded-pill" id="area" name="area" placeholder="Enter area" required>
+                        </div>
+                        </div>
+                		<input type="hidden" name="email" th:value="${session.doctor.email}"/>
+                                    <div class="col-12 text-end">
+                                        <button type="submit" class="btn btn-gradient-pill px-4 py-2">
+                                            <i class="fas fa-save me-2"></i>Save Details
+                                        </button>
+                                    </div>
+                                </div>
+                    </form>
+                        </div>
+                </div>  
+
+                <!-- Doctor Available Form -->
+                <div id="doctorAvailable" class="form-section" style="display: none;">
+                        <div class="card modern-form-card shadow-lg p-4 mb-4">
+                            <h2 class="form-title mb-3">Doctor Availability</h2>
+                            <form th:action="@{/doctor/updateDocAvail}" method="post">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="mon_mor" class="form-label">Monday Morning</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                            <input type="text" th:value="${session.doctor.doctorAvail.mon_mor}" class="form-control rounded-pill" id="mon_mor" name="mon_mor" placeholder="eg: 9:30am-12:30pm">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="mon_eve" class="form-label">Monday Evening</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-moon"></i></span>
+                                            <input type="text" th:value="${session.doctor.doctorAvail.mon_eve}" class="form-control rounded-pill" id="mon_eve" name="mon_eve" placeholder="eg: 6:30pm-9:30pm">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="tue_mor" class="form-label">Tuesday Morning</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                            <input type="text" th:value="${session.doctor.doctorAvail.tue_mor}" class="form-control rounded-pill" id="tue_mor" name="tue_mor" placeholder="eg: 9:30am-12:30pm">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="tue_eve" class="form-label">Tuesday Evening</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-moon"></i></span>
+                                            <input type="text" th:value="${session.doctor.doctorAvail.tue_eve}" class="form-control rounded-pill" id="tue_eve" name="tue_eve" placeholder="eg: 6:30pm-9:30pm">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="wed_mor" class="form-label">Wednesday Morning</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                            <input type="text" th:value="${session.doctor.doctorAvail.wed_mor}" class="form-control rounded-pill" id="wed_mor" name="wed_mor" placeholder="eg: 9:30am-12:30pm">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="wed_eve" class="form-label">Wednesday Evening</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-moon"></i></span>
+                                            <input type="text" th:value="${session.doctor.doctorAvail.wed_eve}" class="form-control rounded-pill" id="wed_eve" name="wed_eve" placeholder="eg: 6:30pm-9:30pm">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="thu_mor" class="form-label">Thursday Morning</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                            <input type="text" th:value="${session.doctor.doctorAvail.thu_mor}" class="form-control rounded-pill" id="thu_mor" name="thu_mor" placeholder="eg: 9:30am-12:30pm">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="thu_eve" class="form-label">Thursday Evening</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-moon"></i></span>
+                                            <input type="text" th:value="${session.doctor.doctorAvail.thu_eve}" class="form-control rounded-pill" id="thu_eve" name="thu_eve" placeholder="eg: 6:30pm-9:30pm">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="fri_mor" class="form-label">Friday Morning</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                            <input type="text" th:value="${session.doctor.doctorAvail.fri_mor}" class="form-control rounded-pill" id="fri_mor" name="fri_mor" placeholder="eg: 9:30am-12:30pm">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="fri_eve" class="form-label">Friday Evening</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-moon"></i></span>
+                                            <input type="text" th:value="${session.doctor.doctorAvail.fri_eve}" class="form-control rounded-pill" id="fri_eve" name="fri_eve" placeholder="eg: 6:30pm-9:30pm">
+                                        </div>
+                        </div>
+                                    <div class="col-md-6">
+                                        <label for="sat_mor" class="form-label">Saturday Morning</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                            <input type="text" th:value="${session.doctor.doctorAvail.sat_mor}" class="form-control rounded-pill" id="sat_mor" name="sat_mor" placeholder="eg: 9:30am-12:30pm">
+                        </div>
+                        </div>
+                                    <div class="col-md-6">
+                                        <label for="sat_eve" class="form-label">Saturday Evening</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-moon"></i></span>
+                                            <input type="text" th:value="${session.doctor.doctorAvail.sat_eve}" class="form-control rounded-pill" id="sat_eve" name="sat_eve" placeholder="eg: 6:30pm-9:30pm">
+                        </div>
+                        </div>
+                                    <div class="col-md-6">
+                                        <label for="sun_mor" class="form-label">Sunday Morning</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                            <input type="text" th:value="${session.doctor.doctorAvail.sun_mor}" class="form-control rounded-pill" id="sun_mor" name="sun_mor" placeholder="eg: 9:30am-12:30pm">
+                        </div>
+                        </div>
+                                    <div class="col-md-6">
+                                        <label for="sun_eve" class="form-label">Sunday Evening</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-moon"></i></span>
+                                            <input type="text" th:value="${session.doctor.doctorAvail.sun_eve}" class="form-control rounded-pill" id="sun_eve" name="sun_eve" placeholder="eg: 6:30pm-9:30pm">
+                        </div>
+                        </div>
+                                    <div class="col-md-6">
+                                        <label for="max_mor_apmt" class="form-label">Max Morning Appointments</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-plus-circle"></i></span>
+                                            <input type="number" th:value="${session.doctor.doctorAvail.max_mor_apmt}" class="form-control rounded-pill" id="max_mor_apmt" name="max_mor_apmt" min="0" placeholder="Enter max morning appointments" required>
+                        </div>
+                        </div>
+                                    <div class="col-md-6">
+                                        <label for="max_eve_apmt" class="form-label">Max Evening Appointments</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-plus-circle"></i></span>
+                                            <input type="number" th:value="${session.doctor.doctorAvail.max_eve_apmt}" class="form-control rounded-pill" id="max_eve_apmt" name="max_eve_apmt" min="0" placeholder="Enter max evening appointments" required>
+                        </div>
+                        </div>
+                                    <div class="col-12 text-end">
+                                        <button type="submit" class="btn btn-gradient-pill px-4 py-2">
+                                            <i class="fas fa-save me-2"></i>Save Availability
+                                        </button>
+                        </div>
+                        </div>
+                            </form>
+                        </div>
+                </div>
+
+                <!-- Doctor Not Available Form -->
+                <div id="doctorNotAvailable" class="form-section" style="display: none;">
+                        <div class="card modern-form-card shadow-lg p-4 mb-4 rounded-4 border-0">
+                            <h2 class="form-title mb-3">Doctor Not Available (Leave)</h2>
+                            <form method="post" th:action="@{/doctor/addDocNotAvail}">
+                                <div class="row g-3 align-items-end">
+                                    <div class="col-md-8">
+                                        <label for="doc_date" class="form-label">Date</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-white border-end-0 rounded-start-pill"><i class="fas fa-calendar-alt"></i></span>
+                                            <input type="date" name="doc_date" class="form-control rounded-end-pill border-start-0" id="doc_date" required>
+                                        </div>
+                        </div>
+                        <input type="hidden" name="email" th:value="${session.doctor.email}"/>
+                                    <div class="col-md-4 text-end">
+                                        <button type="submit" class="btn btn-gradient-pill px-4 py-2 w-100">
+                                            <i class="fas fa-save me-2"></i>Save
+                                        </button>
+                                    </div>
+                                </div>
+                    </form>
+                    <hr>
+                    <div>
+                                <p class="form-title mb-2" style="font-size:1.2rem; color:#5f36d6;">Leave Records</p>
+                                <div class="bg-light p-3 rounded-4 shadow-sm">
+                                <div th:each="x: ${session.dna}">
+                                        <div class="d-flex align-items-center justify-content-between mb-2 p-2 rounded-3" style="background:#f3f0ff;">
+                                            <span class="text-danger fw-semibold" th:text="${x.doc_date}"></span>
+                                            <a th:href="@{/doctor/cancelDocNotAvail(id=${x.id})}" class="btn btn-danger btn-sm rounded-pill ms-3">
+                                                <i class="fas fa-times me-1"></i>Cancel
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div th:if="${#lists.isEmpty(session.dna)}" class="text-muted text-center py-2">No leave records found.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Doctor Schedule Form -->
+                    <!-- Removed Doctor Schedule Form -->
+
+                   	
+                </div>
+            </div>
+        </div>
+    </div>
+                          </div>
+                        
+<!-- Footer (copied exactly from UserHome.html for pixel-perfect match) -->
+<footer class="footer">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="footer-brand">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="20" fill="#7c4dff"/>
+                        <path d="M20 10v20M10 20h20" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+                    </svg>
+                    <span>medicare</span>
+                          </div>
+                <p class="footer-description">
+                    Your trusted partner in healthcare. We connect you with verified doctors for convenient, professional medical consultations from the comfort of your home.
+                </p>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                          </div>
+                          </div>
+            <div class="col-lg-2 col-md-6">
+                <div class="footer-section">
+                    <h5>Services</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Online Consultation</a></li>
+                        <li><a href="#">Symptom Checker</a></li>
+                        <li><a href="#">Find Doctors</a></li>
+                        <li><a href="#">Book Appointments</a></li>
+                    </ul>
+                        </div>
+                      </div>
+            <div class="col-lg-2 col-md-6">
+                <div class="footer-section">
+                    <h5>Specialties</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Dentistry</a></li>
+                        <li><a href="#">Cardiology</a></li>
+                        <li><a href="#">Orthopedics</a></li>
+                        <li><a href="#">General Medicine</a></li>
+                    </ul>
+                </div>
+                            </div>
+            <div class="col-lg-2 col-md-6">
+                <div class="footer-section">
+                    <h5>Support</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                        </div>
+                    </div> 
+            <div class="col-lg-2 col-md-6">
+                <div class="footer-section">
+                    <h5>Company</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Medicare. All rights reserved. | Designed with <i class="fas fa-heart text-danger"></i> for better healthcare</p>
+        </div>
+    </div>
+</footer>
+<script>
+    // Mobile menu toggle function
+    function toggleMobileMenu() {
+        const mobileMenu = document.getElementById('mobileMenu');
+        mobileMenu.classList.toggle('show');
+    }
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuContainer = document.querySelector('.mobile-menu-container');
+        
+        if (mobileMenu && mobileMenu.classList.contains('show')) {
+            if (!mobileMenuContainer.contains(event.target)) {
+                mobileMenu.classList.remove('show');
+            }
+        }
+    });
+
+    function showForm(formId) {
+        document.querySelectorAll('.form-section').forEach(section => section.style.display = 'none');
+        document.getElementById(formId).style.display = 'block';
+    }
+     // Set the minimum date to today's date
+     const appointmentDateInput = document.getElementById('doc_date');
+        const today = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+        appointmentDateInput.min = today; // Set the min attribute
+
+    function toggleUserDropdown() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('show');
+    }
+    window.onclick = function(event) {
+        if (!event.target.matches('.user-dropdown-btn') && !event.target.matches('.user-dropdown-btn *')) {
+            const dropdowns = document.getElementsByClassName('user-dropdown-content');
+            for (let dropdown of dropdowns) {
+                if (dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+</script>
+
+</body>
+</html>

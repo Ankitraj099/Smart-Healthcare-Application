@@ -1,0 +1,1440 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- Bootstrap CSS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<!-- Font-Awsome  -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<title>Doctors - Your Health Partner</title>
+<style>
+:root {
+	--primary-color: #17a3b8;
+	--secondary-color: #6c757d;
+	--accent-color: #0d6efd;
+	--light-bg: #f8f9fa;
+	--dark-bg: #343a40;
+}
+
+body {
+	font-family: 'Poppins', sans-serif;
+	overflow-x: hidden;
+	color: #333;
+}
+
+/* Modern Bootstrap Navbar */
+.navbar {
+	position: fixed;
+	top: 15px;
+	left: 0; right: 0;
+	margin: 0 auto;
+	width: 98vw;
+	background: #fff;
+	border-radius: 2.5rem;
+	box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+	transition: all 0.25s cubic-bezier(.4,0,.2,1);
+	z-index: 1000;
+	padding: 0.7rem 1.5rem;
+}
+
+.navbar-brand {
+	display: flex;
+	align-items: center;
+	gap: 0.7rem;
+	text-decoration: none;
+}
+
+.navbar-brand svg {
+	width: 36px; 
+	height: 36px;
+	transition: width 0.18s, height 0.18s;
+}
+
+.navbar-brand .brand-text {
+	font-size: 1.7rem;
+	font-weight: 700;
+	color: #3d2176;
+	letter-spacing: 1px;
+	transition: font-size 0.18s;
+}
+
+/* Desktop Navigation */
+.desktop-nav {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	margin-left: auto;
+}
+
+.desktop-nav .btn {
+	border-radius: 2rem;
+	font-weight: 600;
+	font-size: 1.08rem;
+	padding: 0.45rem 1.3rem;
+	border: none;
+	transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.18s, font-size 0.18s, padding 0.18s;
+	box-shadow: 0 2px 8px rgba(124,77,255,0.08);
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	text-decoration: none;
+}
+
+.btn-signin {
+	background: transparent;
+	color: #3d2176;
+	border: 2px solid #7c4dff;
+}
+
+.btn-signin:hover, .btn-signin:focus {
+	background: #f3f0ff;
+	color: #7c4dff;
+	border-color: #7c4dff;
+	transform: translateY(-2px) scale(1.04);
+	box-shadow: 0 4px 16px rgba(124,77,255,0.12);
+}
+
+.btn-register {
+	background: #7c4dff;
+	color: #fff;
+	border: 2px solid #7c4dff;
+}
+
+.btn-register:hover, .btn-register:focus {
+	background: #5f36d6;
+	color: #fff;
+	border-color: #5f36d6;
+	transform: translateY(-2px) scale(1.04);
+	box-shadow: 0 4px 16px rgba(124,77,255,0.18);
+}
+
+/* Mobile Menu Container */
+.mobile-menu-container {
+	display: none;
+	position: relative;
+}
+
+.navbar-toggler {
+	border: none;
+	padding: 0.5rem;
+	border-radius: 0.5rem;
+	transition: background-color 0.18s;
+	background: transparent;
+}
+
+.navbar-toggler:focus {
+	box-shadow: none;
+	background-color: #f8f9fa;
+}
+
+.navbar-toggler-icon {
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(61, 33, 118, 0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+	width: 24px;
+	height: 24px;
+	display: block;
+}
+
+/* Mobile Dropdown Menu */
+.mobile-menu-dropdown {
+	position: absolute;
+	top: 100%;
+	right: 0;
+	background: #fff;
+	border-radius: 1rem;
+	box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+	padding: 1rem;
+	min-width: 200px;
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(-10px);
+	transition: all 0.3s ease;
+	z-index: 1001;
+	margin-top: 0.5rem;
+}
+
+.mobile-menu-dropdown.show {
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(0);
+}
+
+.mobile-menu-content {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.mobile-menu-item {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.75rem 1rem;
+	border-radius: 0.75rem;
+	text-decoration: none;
+	color: #3d2176;
+	font-weight: 500;
+	transition: all 0.2s ease;
+	background: transparent;
+	border: none;
+	width: 100%;
+	text-align: left;
+}
+
+.mobile-menu-item:hover {
+	background: #f3f0ff;
+	color: #7c4dff;
+	transform: translateX(5px);
+}
+
+.mobile-menu-item i {
+	font-size: 1.1rem;
+	width: 20px;
+	text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 991px) {
+	.navbar { 
+		max-width: 98vw; 
+		padding: 0.5rem 1rem; 
+	}
+	
+	.desktop-nav {
+		display: none;
+	}
+	
+	.mobile-menu-container {
+		display: block;
+	}
+}
+
+/* Hero Section */
+.hero-section {
+	position: relative;
+	width: 100vw;
+	min-height: 100vh;
+	background: linear-gradient(135deg, rgba(0,0,0,0.6), rgba(0,0,0,0.4)), url('https://images.pexels.com/photos/40568/medical-appointment-doctor-healthcare-40568.jpeg?auto=compress&w=1500&q=80') center center/cover no-repeat;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+	padding-top: 120px;
+}
+.hero-overlay {
+	position: absolute;
+	top: 0; left: 0; right: 0; bottom: 0;
+	background: rgba(0,0,0,0.45);
+	z-index: 1;
+}
+.hero-content {
+	position: relative;
+	z-index: 2;
+	color: #fff;
+	text-align: center;
+	width: 100%;
+}
+.hero-content h1 {
+	font-size: 4vw;
+	font-weight: 700;
+	margin-bottom: 1rem;
+	letter-spacing: 1px;
+}
+.hero-content p {
+	font-size: 2vw;
+	font-weight: 400;
+	margin-top: 0;
+}
+.hero-buttons .btn {
+	padding: 0.75rem 2rem;
+	border-radius: 2rem;
+	font-weight: 600;
+	transition: all 0.3s ease;
+}
+.hero-buttons .btn:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+@media (max-width: 700px) {
+	.hero-content h1 { font-size: 2rem; }
+	.hero-content p { font-size: 1.1rem; }
+	.hero-buttons .btn { padding: 0.6rem 1.5rem; }
+}
+
+/* Features Section */
+.features-section {
+	background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+.feature-card {
+	background: #fff;
+	border-radius: 1.5rem;
+	box-shadow: 0 6px 32px rgba(124,77,255,0.07), 0 1.5px 6px rgba(0,0,0,0.04);
+	border: none;
+	transition: all 0.25s cubic-bezier(.4,0,.2,1);
+	position: relative;
+	padding-top: 2.5rem !important;
+	padding-bottom: 2.2rem !important;
+	overflow: visible;
+}
+.feature-card::before {
+	content: '';
+	display: block;
+	position: absolute;
+	top: 0; left: 0; right: 0;
+	height: 5px;
+	border-radius: 1.5rem 1.5rem 0 0;
+	background: linear-gradient(90deg, #7c4dff 0%, #5f36d6 100%);
+	opacity: 0.18;
+}
+.feature-card:hover {
+	transform: translateY(-10px) scale(1.03);
+	box-shadow: 0 16px 48px rgba(124,77,255,0.13), 0 2px 8px rgba(0,0,0,0.06);
+}
+.feature-icon-bg {
+	width: 64px;
+	height: 64px;
+	border-radius: 50%;
+	background: linear-gradient(135deg, #ede7f6 0%, #f3f0ff 100%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto 1.2rem auto;
+	box-shadow: 0 2px 8px rgba(124,77,255,0.08);
+	transition: background 0.18s;
+}
+.feature-card:hover .feature-icon-bg {
+	background: linear-gradient(135deg, #7c4dff 0%, #5f36d6 100%);
+}
+.feature-icon-bg i {
+	font-size: 2rem;
+	color: #7c4dff;
+	transition: color 0.18s;
+}
+.feature-card:hover .feature-icon-bg i {
+	color: #fff;
+}
+.feature-card h5 {
+	font-size: 1.35rem;
+	font-weight: 700;
+	margin-bottom: 1.1rem;
+}
+.feature-card p {
+	font-size: 1.08rem;
+	color: #555;
+	margin-bottom: 0;
+}
+@media (max-width: 991px) {
+	.feature-card { margin-bottom: 1.5rem; }
+	.feature-icon-bg { width: 48px; height: 48px; }
+	.feature-icon-bg i { font-size: 1.3rem; }
+}
+
+/* Search Section */
+.search-section {
+	background: white;
+}
+.search-section .card {
+	border-radius: 1.2rem;
+	box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+	padding: 1.5rem 1.5rem 1rem 1.5rem;
+}
+.search-section .form-select {
+	border-radius: 0.7rem !important;
+	padding: 0.7rem 1.2rem !important;
+	font-size: 1rem;
+	background: #f8f9fa;
+	border: 1px solid #e0e0e0;
+	box-shadow: none;
+}
+.search-section .form-floating > label {
+	left: 1.1rem;
+	top: 0.7rem;
+	font-size: 1rem;
+	color: #888;
+	background: transparent;
+	padding: 0 0.2rem;
+}
+.search-section .btn-primary.h-100.w-100 {
+	border-radius: 50% !important;
+	width: 48px !important;
+	height: 48px !important;
+	min-width: 48px !important;
+	min-height: 48px !important;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 !important;
+	font-size: 1.3rem;
+	box-shadow: 0 2px 8px rgba(124,77,255,0.10);
+}
+.search-section .btn-primary.h-100.w-100 i {
+	margin: 0;
+}
+@media (max-width: 991px) {
+	.search-section .card { padding: 1rem; }
+	.search-section .btn-primary.h-100.w-100 { width: 40px; height: 40px; font-size: 1.1rem; }
+}
+
+/* Consultation Section */
+.consultation-section {
+	background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+.consultation-card {
+	background: white;
+	border-radius: 1rem;
+	box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+	transition: all 0.3s ease;
+	border: 1px solid rgba(124,77,255,0.1);
+}
+.consultation-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 12px 40px rgba(124,77,255,0.15);
+}
+.consultation-img {
+	width: 60px;
+	height: 60px;
+	object-fit: contain;
+}
+
+/* Specialties Section */
+.specialties-section {
+	background: white;
+}
+.specialty-card {
+	background: white;
+	border-radius: 1rem;
+	overflow: hidden;
+	box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+	transition: all 0.3s ease;
+	border: 1px solid rgba(124,77,255,0.1);
+}
+.specialty-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 12px 40px rgba(124,77,255,0.15);
+}
+.specialty-card .card-img-top {
+	height: 200px;
+	object-fit: cover;
+	background: #20c997;
+}
+.specialty-card .card-body {
+	padding: 1.5rem;
+}
+
+/* Articles Section */
+.articles-section {
+	background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+.articles-section .card {
+	border-radius: 1rem;
+	overflow: hidden;
+	transition: all 0.3s ease;
+}
+.articles-section .card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+}
+
+/* Doctor Cards */
+.doctor-card {
+	background: white;
+	border-radius: 1rem;
+	overflow: hidden;
+	transition: all 0.3s ease;
+}
+.doctor-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 12px 40px rgba(124,77,255,0.15);
+}
+
+/* Buttons */
+.btn-primary {
+	background: linear-gradient(135deg, #7c4dff 0%, #5f36d6 100%);
+	border: none;
+	padding: 0.75rem 1.5rem;
+	border-radius: 0.75rem;
+	font-weight: 600;
+	transition: all 0.3s ease;
+}
+.btn-primary:hover {
+	background: linear-gradient(135deg, #5f36d6 0%, #4a2bb8 100%);
+	transform: translateY(-2px);
+	box-shadow: 0 8px 25px rgba(124,77,255,0.3);
+}
+.btn-outline-primary {
+	border-color: #7c4dff;
+	color: #7c4dff;
+	border-radius: 0.75rem;
+	font-weight: 600;
+	transition: all 0.3s ease;
+}
+.btn-outline-primary:hover {
+	background: #7c4dff;
+	border-color: #7c4dff;
+	transform: translateY(-2px);
+	box-shadow: 0 8px 25px rgba(124,77,255,0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+	.hero-content h1 {
+		font-size: 2.5rem;
+	}
+	.feature-card, .consultation-card, .specialty-card {
+		margin-bottom: 1.5rem;
+	}
+	.search-section .card {
+		margin-top: 0;
+		padding: 1rem;
+	}
+}
+
+/* Symptom Checker Section */
+.symptom-checker {
+	background: var(--light-bg);
+	padding: 3rem 0;
+	border-radius: 15px;
+	margin: 2rem 0;
+}
+
+.results-container {
+	background: white;
+	border-radius: 15px;
+	padding: 2rem;
+	margin-top: 2rem;
+	box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Teladoc-style Navbar with subtle shrink effect */
+.tela-navbar {
+    position: fixed;
+    top: 24px;
+    left: 0;
+    right: 0;
+    z-index: 1050;
+    background: #fff;
+    border-radius: 2.5rem;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 1.2rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: top 0.3s cubic-bezier(.4,0,.2,1), box-shadow 0.2s, background 0.2s, padding 0.18s cubic-bezier(.4,0,.2,1);
+}
+.tela-navbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.tela-navbar-logo svg {
+    width: 36px;
+    height: 36px;
+    transition: width 0.18s, height 0.18s;
+}
+.tela-navbar-logo-text {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 1.7rem;
+    color: #3d2176;
+    letter-spacing: 1px;
+    transition: font-size 0.18s;
+}
+.tela-navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 2.2rem;
+    margin-right: 2.5rem;
+}
+.tela-navbar-link {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 1.15rem;
+    color: #2d2250;
+    text-decoration: none;
+    transition: color 0.18s;
+    position: relative;
+}
+.tela-navbar-link:hover, .tela-navbar-link:focus {
+    color: #7c4dff;
+}
+.tela-navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: gap 0.18s;
+}
+.tela-navbar-btn {
+    border-radius: 2rem;
+    font-weight: 600;
+    font-size: 1.08rem;
+    padding: 0.45rem 1.3rem;
+    border: none;
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.18s, font-size 0.18s, padding 0.18s;
+    box-shadow: 0 2px 8px rgba(124,77,255,0.08);
+}
+.tela-navbar-btn-signin {
+    background: transparent;
+    color: #3d2176;
+    border: 2px solid #7c4dff;
+}
+.tela-navbar-btn-signin:hover, .tela-navbar-btn-signin:focus {
+    background: #f3f0ff;
+    color: #7c4dff;
+    border-color: #7c4dff;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 4px 16px rgba(124,77,255,0.12);
+}
+.tela-navbar-btn-register {
+    background: #7c4dff;
+    color: #fff;
+    border: 2px solid #7c4dff;
+}
+.tela-navbar-btn-register:hover, .tela-navbar-btn-register:focus {
+    background: #5f36d6;
+    color: #fff;
+    border-color: #5f36d6;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 4px 16px rgba(124,77,255,0.18);
+}
+@media (max-width: 991px) {
+    .tela-navbar {
+        max-width: 98vw;
+        padding: 0.5rem 1rem;
+    }
+    .tela-navbar-links {
+        gap: 1.2rem;
+        margin-right: 1rem;
+    }
+}
+
+/* --- Footer Fixes --- */
+.footer-section {
+    padding-top: 2.2rem !important;
+    padding-bottom: 1.2rem !important;
+}
+.footer-section .row.g-3 { margin-bottom: 0.5rem; }
+.footer-section .footer-links li { margin-bottom: 0.4rem; }
+.footer-section .footer-links a { color: #bdbdbd !important; font-weight: 400; }
+.footer-section .footer-links a:hover { color: #fff !important; text-decoration: underline; }
+.footer-section .col-lg-2, .footer-section .col-lg-4 { min-width: 160px; }
+.footer-section .d-flex.flex-wrap.gap-3 { margin-bottom: 0.5rem; }
+.footer-section h6, .footer-section h5, .footer-section .fs-4 { margin-bottom: 0.7rem !important; }
+.footer-section .text-muted { color: #bdbdbd !important; }
+.footer-section .row.mb-2 { margin-bottom: 0.2rem !important; }
+.footer-section .row.align-items-center { margin-top: 0.5rem; }
+.footer-section .d-flex.justify-content-md-end.gap-3 { margin-top: 0.2rem; }
+
+/* Ensure footer columns are visible and not empty */
+.footer-section .footer-links:empty::before {
+    content: 'No links available';
+    color: #888;
+    font-size: 0.95rem;
+}
+
+/* --- Fix floating label overlap for select fields --- */
+.search-section .form-floating > .form-select {
+  padding-top: 1.6rem !important;
+  padding-bottom: 0.6rem !important;
+}
+.search-section .form-floating > label {
+  top: 0.3rem;
+  left: 1.2rem;
+  font-size: 1rem;
+  color: #888;
+  opacity: 1;
+  background: #f8f9fa;
+  padding: 0 0.3rem;
+  pointer-events: none;
+  transform: translateY(0) scale(0.95);
+  height: auto;
+}
+.search-section .form-floating > .form-select:focus ~ label,
+.search-section .form-floating > .form-select:not(:placeholder-shown) ~ label {
+  top: -0.7rem;
+  left: 1rem;
+  font-size: 0.92rem;
+  color: #7c4dff;
+  background: #fff;
+  padding: 0 0.4rem;
+  border-radius: 0.4rem;
+  opacity: 1;
+  z-index: 2;
+}
+
+/* --- Ensure search button has icon and is aligned --- */
+.search-section .btn-primary.h-100.w-100 {
+  border-radius: 50% !important;
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  min-height: 48px !important;
+	display: flex;
+	align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+  font-size: 1.3rem;
+  box-shadow: 0 2px 8px rgba(124,77,255,0.10);
+}
+.search-section .btn-primary.h-100.w-100 i {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+/* --- Google-style Search Button --- */
+.search-section .btn-search-google {
+  background: #fff !important;
+  border: none !important;
+  border-radius: 50% !important;
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  min-height: 48px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  transition: box-shadow 0.18s;
+}
+.search-section .btn-search-google:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+}
+.search-section .btn-search-google svg {
+  width: 26px;
+  height: 26px;
+  display: block;
+}
+@media (max-width: 991px) {
+  .search-section .btn-search-google { width: 40px; height: 40px; }
+  .search-section .btn-search-google svg { width: 22px; height: 22px; }
+}
+
+.footer { background: #1a202c; color: white; padding: 60px 0 30px; }
+.footer-brand { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; }
+.footer-brand svg { width: 32px; height: 32px; }
+.footer-brand span { font-weight: 700; font-size: 1.5rem; color: #7c4dff; }
+.footer-description { color: #a0aec0; line-height: 1.6; margin-bottom: 2rem; }
+.footer-section h5 { color: white; font-weight: 700; margin-bottom: 1.5rem; }
+.footer-links { list-style: none; padding: 0; }
+.footer-links li { margin-bottom: 0.75rem; }
+.footer-links a { color: #a0aec0; text-decoration: none; transition: color 0.3s ease; }
+.footer-links a:hover { color: #7c4dff; }
+.footer-social { display: flex; gap: 1rem; margin-top: 1rem; }
+.footer-social a { width: 40px; height: 40px; background: rgba(124, 77, 255, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #7c4dff; text-decoration: none; transition: all 0.3s ease; }
+.footer-social a:hover { background: #7c4dff; color: white; transform: translateY(-2px); }
+.footer-bottom { border-top: 1px solid #2d3748; padding-top: 2rem; margin-top: 3rem; text-align: center; color: #a0aec0; }
+@media (max-width: 768px) { .footer .row.g-4 { flex-direction: column; gap: 2rem; } .footer-section { margin-bottom: 1.5rem; } }
+</style>
+</head>
+<body>
+	<!-- Modern Bootstrap Navbar -->
+	<nav class="navbar navbar-expand-lg" id="navbar">
+		<div class="container-fluid">
+			<!-- Brand/Logo -->
+			<a class="navbar-brand" href="/">
+				<svg viewBox="0 0 40 40" fill="none">
+					<circle cx="20" cy="20" r="20" fill="#7c4dff"/>
+					<path d="M20 10v20M10 20h20" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+				</svg>
+				<span class="brand-text">medicare</span>
+			</a>
+			
+			<!-- Desktop Navigation -->
+			<div class="navbar-nav desktop-nav">
+				<!-- Action Buttons -->
+				<a href="login-signup" class="btn btn-signin">
+					<i class="fas fa-arrow-right-to-bracket"></i> Log in
+				</a>
+				<a href="login-signup" class="btn btn-register">
+					Sign up
+				</a>
+			</div>
+			
+			<!-- Mobile Dropdown Menu -->
+			<div class="mobile-menu-container">
+				<button class="navbar-toggler" type="button" onclick="toggleMobileMenu()" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="mobile-menu-dropdown" id="mobileMenu">
+					<div class="mobile-menu-content">
+						<a href="login-signup" class="mobile-menu-item">
+							<i class="fas fa-arrow-right-to-bracket"></i> Log in
+						</a>
+						<a href="login-signup" class="mobile-menu-item">
+							<i class="fas fa-user-plus"></i> Sign up
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+	<div class="container text-center">
+        <div th:if="${msg!=null}">
+            <p class="alert alert-warning" th:text="${msg}"></p>
+        </div>
+    </div>
+	
+	<!-- Hero Section -->
+	<section class="hero-section">
+		<div class="hero-overlay"></div>
+		<div class="hero-content">
+			<div class="container">
+				<div class="row justify-content-center">
+					<div class="col-lg-8 text-center">
+						<h1 class="display-4 fw-bold mb-4">Your Health, Our Priority</h1>
+						<p class="lead mb-5">Connect with top healthcare professionals for personalized care and expert medical guidance</p>
+						<div class="hero-buttons">
+							<a href="#find-doctor" class="btn btn-primary btn-lg me-3 mb-2">
+								<i class="fas fa-search me-2"></i>Find a Doctor
+							</a>
+							<a href="#symptomchecker" class="btn btn-outline-light btn-lg mb-2">
+								<i class="fas fa-stethoscope me-2"></i>Check Symptoms
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Features Section -->
+	<section class="features-section py-5">
+		<div class="container">
+			<div class="row g-4">
+				<div class="col-lg-3 col-md-6">
+					<div class="feature-card text-center p-4 h-100">
+						<div class="feature-icon-bg mb-3">
+							<i class="fas fa-video"></i>
+						</div>
+						<h5 class="fw-bold mb-3">Video Consultation</h5>
+						<p>Connect with doctors within 60 seconds for instant medical advice</p>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="feature-card text-center p-4 h-100">
+						<div class="feature-icon-bg mb-3">
+							<i class="fas fa-user-md"></i>
+						</div>
+						<h5 class="fw-bold mb-3">Find Doctor Near You</h5>
+						<p>Book confirmed appointments with verified healthcare professionals</p>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="feature-card text-center p-4 h-100">
+						<div class="feature-icon-bg mb-3">
+							<i class="fas fa-calendar-check"></i>
+						</div>
+						<h5 class="fw-bold mb-3">Book Appointments</h5>
+						<p>Safe and trusted surgery centers with flexible scheduling</p>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="feature-card text-center p-4 h-100">
+						<div class="feature-icon-bg mb-3">
+							<i class="fas fa-pills"></i>
+						</div>
+						<h5 class="fw-bold mb-3">Digital Prescriptions</h5>
+						<p>Get prescriptions digitally and order medicines online</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Symptom Checker Section -->
+	<section id="symptomchecker" class="symptom-checker-section py-5 bg-light">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-lg-8">
+					<div class="text-center mb-5">
+						<h2 class="fw-bold mb-3">
+							<i class="fas fa-stethoscope text-primary me-3"></i>
+							AI-Powered Symptom Checker
+						</h2>
+						<p class="lead text-muted">Get instant medical guidance by describing your symptoms</p>
+					</div>
+					
+					<div class="card border-0 shadow-lg">
+						<div class="card-body p-5">
+		<form class="text-center" th:action="@{/symptomChecker}" method="post">
+								<div class="input-group input-group-lg mb-4">
+									<input class="form-control border-0" name="symptoms" type="text" 
+										   placeholder="Describe your symptoms (e.g., fever, headache, cough...)" 
+										   required
+										   autocomplete="off"/>
+									<button class="btn btn-primary px-4" type="submit">
+										<i class="fas fa-search me-2"></i>Analyze Symptoms
+									</button>
+			</div>
+		</form>
+
+							<div th:if="${dataSet != null}" class="results-container mt-5" id="symptom-results">
+								<div class="card border-0 bg-gradient-primary text-white">
+									<div class="card-body p-4">
+										<h3 class="mb-4">
+											<i class="fas fa-clipboard-check me-2"></i>
+											Analysis Results
+										</h3>
+										
+										<div class="alert alert-info bg-white text-dark mb-4">
+											<i class="fas fa-info-circle me-2"></i>
+											<span id="typing-result" th:text="${dataSet.message}"></span>
+										</div>
+										
+										<div id="rec-warn-section" style="display:none;">
+											<div class="row g-4">
+												<div class="col-md-6">
+													<div class="card h-100 border-0 bg-white text-dark">
+														<div class="card-body">
+															<h4 class="card-title text-success">
+																<i class="fas fa-check-circle me-2"></i>
+																Recommendations
+															</h4>
+															<ul class="list-unstyled">
+																<li th:each="r : ${dataSet.recommendations}" class="mb-2">
+																	<i class="fas fa-arrow-right text-success me-2"></i>
+																	<span th:text="${r}"></span>
+																</li>
+															</ul>
+														</div>
+													</div>
+												</div>
+												
+												<div class="col-md-6">
+													<div class="card h-100 border-0 bg-white text-dark">
+														<div class="card-body">
+															<h4 class="card-title text-warning">
+																<i class="fas fa-exclamation-triangle me-2"></i>
+																Warnings
+															</h4>
+															<ul class="list-unstyled">
+																<li th:each="r : ${dataSet.warnings}" class="mb-2">
+																	<i class="fas fa-arrow-right text-warning me-2"></i>
+																	<span th:text="${r}"></span>
+																</li>
+															</ul>
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<div class="row mt-4">
+												<div class="col-md-6">
+													<div class="card border-0 bg-white text-dark">
+														<div class="card-body">
+															<h4 class="card-title text-primary">
+																<i class="fas fa-user-md me-2"></i>
+																Physician Consult
+															</h4>
+															<p class="mb-0" th:text="${dataSet.requiresPhysicianConsult}"></p>
+														</div>
+													</div>
+												</div>
+												
+												<div class="col-md-6">
+													<div class="card border-0 bg-white text-dark">
+														<div class="card-body">
+															<h4 class="card-title text-danger">
+																<i class="fas fa-ambulance me-2"></i>
+																Emergency Level
+															</h4>
+															<p class="mb-0" th:text="${dataSet.emergencyLevel}"></p>
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<div class="mt-4">
+												<h4 class="text-white">
+													<i class="fas fa-stethoscope me-2"></i>
+													Top Related Specialties
+												</h4>
+												<div class="d-flex flex-wrap gap-2 mt-3">
+													<span th:each="r : ${dataSet.topRelatedSpecialties}" 
+														  class="badge bg-white text-primary p-2">
+														<i class="fas fa-user-md me-1"></i>
+														<span th:text="${r}"></span>
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Search Section -->
+	<section id="find-doctor" class="search-section py-5">
+		<div class="container">
+			<div class="text-center mb-5">
+				<h2 class="fw-bold mb-3">
+					<i class="fas fa-search text-primary me-3"></i>
+					Find Your Perfect Doctor
+				</h2>
+				<p class="lead text-muted">Search for healthcare professionals by location and specialty</p>
+			</div>
+
+			<div class="card border-0 shadow-lg">
+				<div class="card-body p-5">
+		<form action="searchDoctor" method="post">
+						<div class="row g-4">
+							<div class="col-md-4">
+								<div class="form-floating">
+									<select name="state" class="form-select border-0 bg-light" id="stateSelect">
+										<option value="">Select State</option>
+					</select>
+									<label for="stateSelect">
+										<i class="fas fa-location-dot me-2"></i>State
+									</label>
+				</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-floating">
+									<select name="city" class="form-select border-0 bg-light" id="citySelect">
+										<option value="">Select City</option>
+					</select>
+									<label for="citySelect">
+										<i class="fas fa-city me-2"></i>City
+									</label>
+				</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-floating">
+									<select id="doctorCategory" class="form-select border-0 bg-light" name="speciality">
+										<option value="">Select Speciality</option>
+						<option value="Dentist">Dentist</option>
+										<option value="Dermatologist">Dermatologist</option>
+										<option value="Cardiologist">Cardiologist</option>
+										<option value="Neurologist">Neurologist</option>
+										<option value="Pediatrician">Pediatrician</option>
+										<option value="Orthopedist">Orthopedist</option>
+										<option value="Gynecologist">Gynecologist</option>
+										<option value="Ent-Specialist">ENT Specialist</option>
+										<option value="Psychiatrist">Psychiatrist</option>
+						<option value="General-Physician">General Physician</option>
+										<option value="Oncologist">Oncologist</option>
+										<option value="Endocrinologist">Endocrinologist</option>
+										<option value="Gastroenterologist">Gastroenterologist</option>
+					</select>
+									<label for="doctorCategory">
+										<i class="fas fa-user-doctor me-2"></i>Speciality
+									</label>
+				</div>
+							</div>
+							<div class="col-md-1">
+								<button type="submit" class="btn btn-search-google h-100 w-100" aria-label="Search">
+									<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<circle cx="11" cy="11" r="7" stroke="#4285F4" stroke-width="2"/>
+										<path d="M20 20L16.65 16.65" stroke="#4285F4" stroke-width="2" stroke-linecap="round"/>
+									</svg>
+				</button>
+							</div>
+			</div>
+		</form>
+
+					<!-- Doctor Results -->
+					<div th:if="${doctors != null and !#lists.isEmpty(doctors)}" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-5">
+			<div th:each="doctor : ${doctors}" class="col">
+							<div class="card doctor-card h-100 border-0 shadow-sm">
+								<div class="card-body text-center p-4">
+									<div class="position-relative mb-4">
+										<img th:src="@{/doctor/getPhoto(email=${doctor.email})}" 
+											 class="rounded-circle border border-primary border-3 p-1" 
+											 style="width: 120px; height: 120px; object-fit: cover;"
+											 alt="Doctor Photo">
+									</div>
+									<h5 class="card-title mb-2 fw-bold" th:text="${doctor.name}"></h5>
+									<p class="card-text mb-2 text-muted">
+										<i class="fas fa-stethoscope text-primary me-2"></i>
+							<strong>Speciality:</strong>
+							<span th:text="${doctor.speciality}"></span>
+						</p>
+									<p class="card-text mb-3 text-muted">
+										<i class="fas fa-envelope text-primary me-2"></i>
+							<strong>Email:</strong>
+							<span th:text="${doctor.email}"></span>
+						</p>
+						<div class="mt-3">
+							<form th:action="@{/DoctorDetails}" method="post">
+								<input type="hidden" name="docEmail" th:value="${doctor.email}"/>
+											<button class="btn btn-primary">
+												<i class="fas fa-user-md me-2"></i>View Details
+											</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+					<div th:if="${doctors != null and #lists.isEmpty(doctors)}" class="text-center mt-5">
+						<div class="alert alert-info border-0" role="alert">
+							<i class="fas fa-info-circle me-2"></i>
+							No doctors found matching your search criteria. Please try different filters.
+		</div>
+						</div>
+					</div>
+				</div>
+						</div>
+	</section>
+
+	<!-- Online Consultation Section -->
+	<section class="consultation-section py-5 bg-light">
+		<div class="container">
+			<div class="text-center mb-5">
+				<h2 class="fw-bold mb-3">Quick Online Consultations</h2>
+				<p class="lead text-muted">Get expert medical advice for common health concerns</p>
+			</div>
+			<div class="row row-cols-1 row-cols-md-2 row-cols-lg-5 g-4">
+				<div class="col">
+					<div class="consultation-card text-center p-4 h-100">
+						<div class="consultation-icon mb-3">
+							<img src="https://cdn-icons-png.flaticon.com/512/1995/1995574.png" alt="Headache & Migraine" class="consultation-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1995/1995574.png'; this.onerror=null;">
+						</div>
+						<h5 class="fw-bold mb-2">Headache & Migraine</h5>
+						<p class="text-primary fw-bold mb-3">$15</p>
+						<a th:href="@{login-signup}" class="btn btn-outline-primary w-100">Consult Now</a>
+					</div>
+				</div>
+				<div class="col">
+					<div class="consultation-card text-center p-4 h-100">
+						<div class="consultation-icon mb-3">
+							<img src="https://cdn-icons-png.flaticon.com/512/1995/1995575.png" alt="Respiratory Issues" class="consultation-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1995/1995575.png'; this.onerror=null;">
+						</div>
+						<h5 class="fw-bold mb-2">Respiratory Issues</h5>
+						<p class="text-primary fw-bold mb-3">$20</p>
+						<a th:href="@{login-signup}" class="btn btn-outline-primary w-100">Consult Now</a>
+					</div>
+				</div>
+				<div class="col">
+					<div class="consultation-card text-center p-4 h-100">
+						<div class="consultation-icon mb-3">
+							<img src="https://cdn-icons-png.flaticon.com/512/1995/1995576.png" alt="Diabetes Management" class="consultation-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1995/1995576.png'; this.onerror=null;">
+						</div>
+						<h5 class="fw-bold mb-2">Diabetes Management</h5>
+						<p class="text-primary fw-bold mb-3">$25</p>
+						<a th:href="@{login-signup}" class="btn btn-outline-primary w-100">Consult Now</a>
+					</div>
+				</div>
+				<div class="col">
+					<div class="consultation-card text-center p-4 h-100">
+						<div class="consultation-icon mb-3">
+							<img src="https://cdn-icons-png.flaticon.com/512/1995/1995577.png" alt="Hypertension" class="consultation-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1995/1995577.png'; this.onerror=null;">
+						</div>
+						<h5 class="fw-bold mb-2">Hypertension</h5>
+						<p class="text-primary fw-bold mb-3">$18</p>
+						<a th:href="@{login-signup}" class="btn btn-outline-primary w-100">Consult Now</a>
+					</div>
+				</div>
+				<div class="col">
+					<div class="consultation-card text-center p-4 h-100">
+						<div class="consultation-icon mb-3">
+							<img src="https://cdn-icons-png.flaticon.com/512/1995/1995578.png" alt="Dermatology" class="consultation-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1995/1995578.png'; this.onerror=null;">
+						</div>
+						<h5 class="fw-bold mb-2">Dermatology</h5>
+						<p class="text-primary fw-bold mb-3">$30</p>
+						<a th:href="@{login-signup}" class="btn btn-outline-primary w-100">Consult Now</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Specialties Section -->
+	<section class="specialties-section py-5">
+		<div class="container">
+			<div class="text-center mb-5">
+				<h2 class="fw-bold mb-3">Book In-Clinic Appointments</h2>
+				<p class="lead text-muted">Find experienced doctors across all medical specialties</p>
+			</div>
+			<div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+				<div class="col">
+					<div class="specialty-card h-100">
+						<img class="card-img-top" src="images/dentist.png" alt="Dentist">
+						<div class="card-body text-center">
+							<h5 class="card-title fw-bold">Dentist</h5>
+							<p class="card-text text-muted">Comprehensive dental care and oral health services</p>
+							<a href="login-signup" class="btn btn-primary">Book Appointment</a>
+						</div>
+					</div>
+				</div>
+				<div class="col">
+					<div class="specialty-card h-100">
+						<img class="card-img-top" src="images/heart.png" alt="Cardiology">
+						<div class="card-body text-center">
+							<h5 class="card-title fw-bold">Cardiology</h5>
+							<p class="card-text text-muted">Expert heart care and cardiovascular treatments</p>
+							<a href="login-signup" class="btn btn-primary">Book Appointment</a>
+						</div>
+					</div>
+				</div>
+				<div class="col">
+					<div class="specialty-card h-100">
+						<img class="card-img-top" src="images/doctor.png" alt="Orthopedist">
+						<div class="card-body text-center">
+							<h5 class="card-title fw-bold">Orthopedist</h5>
+							<p class="card-text text-muted">Bone and joint care with advanced treatments</p>
+							<a href="login-signup" class="btn btn-primary">Book Appointment</a>
+						</div>
+					</div>
+				</div>
+				<div class="col">
+					<div class="specialty-card h-100">
+						<img class="card-img-top" src="https://cdn.pixabay.com/photo/2021/11/23/19/43/emergency-room-6819494_1280.png" alt="General Physician" style="background-color: #20c997 !important;">
+						<div class="card-body text-center">
+							<h5 class="card-title fw-bold">General Physician</h5>
+							<p class="card-text text-muted">Primary care and comprehensive health checkups</p>
+							<a href="login-signup" class="btn btn-primary">Book Appointment</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Health Articles Section -->
+	<section class="articles-section py-5 bg-light">
+		<div class="container">
+			<div class="row g-4">
+				<div class="col-md-4">
+					<div class="card h-100 border-0 shadow-sm">
+						<div class="card-body p-4">
+							<h3 class="card-title fw-bold mb-3">Health Insights & Articles</h3>
+							<p class="card-text text-muted mb-4">Stay informed with expert health articles and wellness tips from our medical professionals.</p>
+							<a href="https://www.who.int/news-room/fact-sheets" target="_blank" rel="noopener" class="btn btn-primary">
+								<i class="fas fa-arrow-right me-2"></i>Read More Articles
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="card h-100 border-0 shadow-sm">
+						<img class="card-img-top" src="images/coron.png" alt="Coronavirus" style="height: 200px; object-fit: cover;">
+						<div class="card-body p-4">
+							<h5 class="card-title fw-bold text-primary">CORONAVIRUS</h5>
+							<p class="card-text">12 Coronavirus Myths and Facts That You Should Be Aware Of</p>
+							<a href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters" target="_blank" rel="noopener" class="btn btn-outline-primary">Read More</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="card h-100 border-0 shadow-sm">
+						<img class="card-img-top" src="images/fruit.png" alt="Vitamins" style="height: 200px; object-fit: cover;">
+						<div class="card-body p-4">
+							<h5 class="card-title fw-bold text-primary">VITAMINS & SUPPLEMENTS</h5>
+							<p class="card-text">Eating Right to Build Immunity Against Cold and Viral Infections</p>
+							<a href="https://www.who.int/health-topics/micronutrients" target="_blank" rel="noopener" class="btn btn-outline-primary">Read More</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script>
+		const stateCityData = {
+			'Bihar': ['Gaya', 'Darbhanga', 'Patna','Buxar'],
+			'Delhi': ['Old Delhi', 'New Delhi'],
+			'Haryana': ['Faridabad', 'Rohtak', 'Panipath', 'Sonipath', 'Karnal'],
+			'Punjab': ['Lahore', 'Ludhiana', 'Amritsar','Chandigarh','Jalandhar'],
+			'Rajasthan': ['Jaipur', '	Jodhpur', '	Bikaner'],
+			'Uttar Pradesh': ['Noida', 'Greater Noida', 'Meerut','Bijnor', 'Kanpur', 'Lucknow', 'Ghaziabad', 'Agra']
+		};
+		const DoctorData = ["Dentist", " Cardiologists" , "ENT Specialist", "Neurologist","Orthopedic"];
+
+		const stateSelect = document.querySelector('select[name="state"]');
+		const citySelect = document.querySelector('select[name="city"]');
+		const Doctors = document.querySelector('select[name="speciality"]');
+
+		// Populate states
+		for (let state in stateCityData) {
+			let option = document.createElement('option');
+			option.value = state;
+			option.textContent = state;
+			stateSelect.appendChild(option);
+		}
+
+		// Listen for state change
+		stateSelect.addEventListener('change', function () {
+			citySelect.innerHTML = '<option value="">Select City</option>'; // Reset city dropdown
+			
+			let selectedState = stateSelect.value;
+			if (selectedState && stateCityData[selectedState]) {
+				stateCityData[selectedState].forEach(city => {
+					let option = document.createElement('option');
+					option.value = city;
+					option.textContent = city;
+					citySelect.appendChild(option);
+				});
+			}
+		});
+		DoctorData.forEach(doctor => {
+			const option = document.createElement('option'); // Create an option element
+			option.value = doctor; // Set the value
+			option.textContent = doctor; // Set the display text
+			Doctors.appendChild(option); // Append to the select element
+		});
+	</script>
+
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+	var hasSymptomResults = /*[[${dataSet != null}]]*/ false;
+	if (hasSymptomResults) {
+		window.onload = function() {
+			var el = document.getElementById('symptom-results');
+			if (el) {
+				el.scrollIntoView({ behavior: 'smooth' });
+			}
+		}
+	}
+	/*]]>*/
+	</script>
+
+	<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		var el = document.getElementById("typing-result");
+		var recWarn = document.getElementById("rec-warn-section");
+		if (el) {
+			var text = el.textContent;
+			el.textContent = "";
+			let i = 0;
+			function type() {
+				if (i < text.length) {
+					el.textContent += text.charAt(i);
+					i++;
+					setTimeout(type, 25); // Adjust speed as needed
+				} else {
+					if (recWarn) recWarn.style.display = "block";
+				}
+			}
+			type();
+		} else {
+			if (recWarn) recWarn.style.display = "block";
+		}
+	});
+	</script>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+	<footer class="footer">
+		<div class="container">
+			<div class="row g-4">
+				<div class="col-lg-4">
+					<div class="footer-brand">
+						<svg viewBox="0 0 40 40" fill="none">
+							<circle cx="20" cy="20" r="20" fill="#7c4dff"/>
+							<path d="M20 10v20M10 20h20" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+						</svg>
+						<span>medicare</span>
+					</div>
+					<p class="footer-description">
+						Your trusted partner in healthcare. We connect you with verified doctors for convenient, professional medical consultations from the comfort of your home.
+					</p>
+					<div class="footer-social">
+						<a href="#"><i class="fab fa-facebook-f"></i></a>
+						<a href="#"><i class="fab fa-twitter"></i></a>
+						<a href="#"><i class="fab fa-linkedin-in"></i></a>
+						<a href="#"><i class="fab fa-instagram"></i></a>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-6">
+					<div class="footer-section">
+						<h5>Services</h5>
+						<ul class="footer-links">
+							<li><a href="#find-doctor">Online Consultation</a></li>
+							<li><a href="#symptomchecker">Symptom Checker</a></li>
+							<li><a href="#find-doctor">Find Doctors</a></li>
+							<li><a href="/login-signup">Book Appointments</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-6">
+					<div class="footer-section">
+						<h5>Specialties</h5>
+						<ul class="footer-links">
+							<li><a href="#">Dentistry</a></li>
+							<li><a href="#">Cardiology</a></li>
+							<li><a href="#">Orthopedics</a></li>
+							<li><a href="#">General Medicine</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-6">
+					<div class="footer-section">
+						<h5>Support</h5>
+						<ul class="footer-links">
+							<li><a href="#">Help Center</a></li>
+							<li><a href="#">Contact Us</a></li>
+							<li><a href="#">Privacy Policy</a></li>
+							<li><a href="#">Terms of Service</a></li>
+						</ul>
+					</div>
+				</div> 
+				<div class="col-lg-2 col-md-6">
+					<div class="footer-section">
+						<h5>Company</h5>
+						<ul class="footer-links">
+							<li><a href="#">About Us</a></li>
+							<li><a href="#">Careers</a></li>
+							<li><a href="#">Blog</a></li>
+							<li><a href="#">Press</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="footer-bottom">
+				<p>&copy; 2024 Medicare  All rights reserved. | Designed with <i class="fas fa-heart text-danger"></i> for better healthcare</p>
+			</div>
+		</div>
+	</footer>
+
+	<script>
+	// Mobile menu toggle function
+	function toggleMobileMenu() {
+		const mobileMenu = document.getElementById('mobileMenu');
+		mobileMenu.classList.toggle('show');
+	}
+
+	// Close mobile menu when clicking outside
+	document.addEventListener('click', function(event) {
+		const mobileMenu = document.getElementById('mobileMenu');
+		const mobileMenuContainer = document.querySelector('.mobile-menu-container');
+		
+		if (mobileMenu && mobileMenu.classList.contains('show')) {
+			if (!mobileMenuContainer.contains(event.target)) {
+				mobileMenu.classList.remove('show');
+			}
+		}
+	});
+
+	// Smooth scroll for anchor links
+	document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+		anchor.addEventListener('click', function (e) {
+			const target = document.querySelector(this.getAttribute('href'));
+			if (target) {
+				e.preventDefault();
+				target.scrollIntoView({ behavior: 'smooth' });
+			}
+		});
+	});
+</script>
+
+</body>
+</html>

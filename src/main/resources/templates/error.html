@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f3f0ff 0%, #e9e4f5 100%);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            margin: 2rem auto 1rem auto;
+            justify-content: center;
+        }
+        .navbar-logo svg {
+            width: 36px; height: 36px;
+        }
+        .navbar-logo-text {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #3d2176;
+            letter-spacing: 1px;
+        }
+        .error-container {
+            background: #fff;
+            max-width: 420px;
+            margin: 2rem auto;
+            padding: 2.5rem 2rem 2rem 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 32px rgba(124,77,255,0.10);
+            text-align: center;
+        }
+        .error-container h1 {
+            color: #e74c3c;
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+        .error-container p {
+            color: #555;
+            font-size: 1.1rem;
+            margin-bottom: 1.2rem;
+        }
+        .error-details {
+            color: #7c4dff;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+        .home-link {
+            display: inline-block;
+            background: #7c4dff;
+            color: #fff;
+            padding: 0.7rem 2rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.08rem;
+            transition: background 0.18s, transform 0.18s;
+        }
+        .home-link:hover {
+            background: #3d2176;
+            transform: translateY(-2px) scale(1.04);
+        }
+        @media (max-width: 600px) {
+            .error-container {
+                padding: 1.2rem 0.5rem 1.5rem 0.5rem;
+                max-width: 98vw;
+            }
+            .navbar-logo {
+                margin: 1.2rem auto 0.5rem auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar-logo">
+        <svg viewBox="0 0 40 40" fill="none">
+            <circle cx="20" cy="20" r="20" fill="#7c4dff"/>
+            <path d="M20 10v20M10 20h20" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+        </svg>
+        <span class="navbar-logo-text">medicare</span>
+    </div>
+    <div class="error-container">
+        <h1>Oops! Something went wrong.</h1>
+        <p>We're sorry, but an unexpected error has occurred.</p>
+        <div class="error-details">
+            <p th:if="${status}" th:text="'Error code: ' + ${status}"></p>
+            <p th:if="${error}" th:text="'Error: ' + ${error}"></p>
+            <p th:if="${message}" th:text="'Message: ' + ${message}"></p>
+        </div>
+        <a href="/" class="home-link">Go to Home</a>
+    </div>
+</body>
+</html> 

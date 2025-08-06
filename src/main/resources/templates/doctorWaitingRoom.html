@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Doctor Waiting Room | Medicare</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Modern Bootstrap Navbar */
+        .navbar {
+            position: fixed;
+            top: 15px;
+            left: 0; right: 0;
+            margin: 0 auto;
+            width: 98vw;
+            background: #fff;
+            border-radius: 2.5rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            transition: all 0.25s cubic-bezier(.4,0,.2,1);
+            z-index: 1000;
+            padding: 0.7rem 1.5rem;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            text-decoration: none;
+        }
+
+        .navbar-brand svg {
+            width: 36px; 
+            height: 36px;
+        }
+
+        .navbar-brand .brand-text {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #3d2176;
+            letter-spacing: 1px;
+        }
+
+        /* Desktop Navigation */
+        .desktop-nav {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            margin-left: auto;
+        }
+
+        .desktop-nav .nav-link {
+            font-size: 1.15rem;
+            color: #2d2250 !important;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.18s;
+            position: relative;
+        }
+
+        .desktop-nav .nav-link:hover, .desktop-nav .nav-link:focus {
+            color: #7c4dff !important;
+        }
+
+        /* Mobile Menu Container */
+        .mobile-menu-container {
+            display: none;
+            position: relative;
+        }
+
+        .navbar-toggler {
+            border: none;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.18s;
+            background: transparent;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
+            background-color: #f8f9fa;
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(61, 33, 118, 0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+            width: 24px;
+            height: 24px;
+            display: block;
+        }
+
+        /* Mobile Dropdown Menu */
+        .mobile-menu-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            padding: 1rem;
+            min-width: 250px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            margin-top: 0.5rem;
+        }
+
+        .mobile-menu-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .mobile-menu-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            text-decoration: none;
+            color: #3d2176;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .mobile-menu-item:hover {
+            background: #f3f0ff;
+            color: #7c4dff;
+            transform: translateX(5px);
+        }
+
+        .mobile-menu-item i {
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .mobile-menu-divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 0.5rem 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 991px) {
+            .navbar { 
+                max-width: 98vw; 
+                padding: 0.5rem 1rem; 
+            }
+            
+            .desktop-nav {
+                display: none;
+            }
+            
+            .mobile-menu-container {
+                display: block;
+            }
+        }
+        
+        /* Main Content */
+        .waiting-room-container {
+            padding: 2rem 0;
+            min-height: calc(100vh - 100px);
+        }
+        
+        .status-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #4fd1c5, #38b2ac);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .status-indicator .pulse {
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .doctor-info {
+            margin-bottom: 2rem;
+        }
+        
+        .doctor-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #7c4dff;
+            margin-bottom: 1rem;
+        }
+        
+        .doctor-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #3d2176;
+            margin-bottom: 0.5rem;
+        }
+        
+        .doctor-speciality {
+            color: #7c4dff;
+            font-weight: 600;
+        }
+        
+        .waiting-message {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin-bottom: 2rem;
+        }
+        
+        /* Video Call Requests */
+        .requests-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .requests-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+        
+        .requests-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #3d2176;
+            margin: 0;
+        }
+        
+        .requests-count {
+            background: #7c4dff;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .request-card {
+            background: #f8fafc;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .request-card:hover {
+            border-color: #7c4dff;
+            box-shadow: 0 4px 16px rgba(124, 77, 255, 0.1);
+        }
+        
+        .request-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .patient-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .patient-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7c4dff, #5f36d6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .patient-details h6 {
+            margin: 0;
+            font-weight: 700;
+            color: #3d2176;
+        }
+        
+        .patient-details p {
+            margin: 0;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        .request-time {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+        
+        .request-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .btn-accept {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: none;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-accept:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-reject {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border: none;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-reject:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
+        }
+        
+        .no-requests {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #64748b;
+        }
+        
+        .no-requests i {
+            font-size: 3rem;
+            color: #cbd5e0;
+            margin-bottom: 1rem;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .btn-go-offline {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            border: none;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-go-offline:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(107, 114, 128, 0.3);
+        }
+        
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 300px;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .waiting-room-container {
+                padding: 1rem;
+            }
+            
+            .status-card, .requests-section {
+                padding: 1.5rem;
+            }
+            
+            .request-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .request-actions {
+                width: 100%;
+            }
+            
+            .btn-accept, .btn-reject {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Modern Bootstrap Navbar -->
+    <nav class="navbar navbar-expand-lg" id="navbar">
+        <div class="container-fluid">
+            <!-- Brand/Logo -->
+            <a class="navbar-brand" href="/doctor/DoctorHome">
+                <svg viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="20" fill="#7c4dff"/>
+                    <path d="M20 10v20M10 20h20" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+                </svg>
+                <span class="brand-text">medicare</span>
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <div class="navbar-nav desktop-nav">
+                <a href="/doctor/DoctorHome" class="nav-link">Home</a>
+                <a href="/doctor/DoctorAppointments" class="nav-link">Appointments</a>
+                <a href="/doctor/doctorProfile" class="nav-link">Profile</a>
+            </div>
+            
+            <!-- Mobile Dropdown Menu -->
+            <div class="mobile-menu-container">
+                <button class="navbar-toggler" type="button" onclick="toggleMobileMenu()" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="mobile-menu-dropdown" id="mobileMenu">
+                    <div class="mobile-menu-content">
+                        <a href="/doctor/DoctorHome" class="mobile-menu-item">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                        <a href="/doctor/DoctorAppointments" class="mobile-menu-item">
+                            <i class="fas fa-calendar"></i> Appointments
+                        </a>
+                        <a href="/doctor/doctorProfile" class="mobile-menu-item">
+                            <i class="fas fa-user-md"></i> Profile
+                        </a>
+                        <div class="mobile-menu-divider"></div>
+                        <a th:href="@{/doctor/DoctorOnline(status=offline)}" class="mobile-menu-item">
+                            <i class="fas fa-power-off"></i> Go Offline
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="waiting-room-container">
+        <div class="container">
+            <!-- Status Card -->
+            <div class="status-card">
+                <div class="status-indicator">
+                    <div class="pulse"></div>
+                    <span>Online & Available</span>
+                </div>
+                
+                <div class="doctor-info">
+                    <img th:src="@{/doctor/getPhoto(email=${doctor.email})}" alt="Doctor Photo" class="doctor-avatar" 
+                         onerror="this.src='https://cdn-icons-png.flaticon.com/512/3870/3870822.png';">
+                    <div class="doctor-name" th:text="${doctor.name}">Dr. John Doe</div>
+                    <div class="doctor-speciality" th:text="${doctor.speciality}">Cardiologist</div>
+                </div>
+                
+                <div class="waiting-message">
+                    <i class="fas fa-clock me-2"></i>
+                    Waiting for video call requests from patients...
+                </div>
+            </div>
+
+            <!-- Video Call Requests Section -->
+            <div class="requests-section">
+                <div class="requests-header">
+                    <h5 class="requests-title">
+                        <i class="fas fa-bell me-2"></i>Incoming Video Call Requests
+                    </h5>
+                    <div class="requests-count" id="requestsCount">0</div>
+                </div>
+                
+                <div id="requestsList">
+                    <!-- Requests will be populated here -->
+                    <div class="no-requests">
+                        <i class="fas fa-user-clock"></i>
+                        <h6>No pending requests</h6>
+                        <p>When patients request video calls, they will appear here.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a th:href="@{/doctor/DoctorOnline(status=offline)}" class="btn btn-go-offline">
+                    <i class="fas fa-power-off me-2"></i>Go Offline
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mobile menu toggle function
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('show');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuContainer = document.querySelector('.mobile-menu-container');
+            
+            if (mobileMenu && mobileMenu.classList.contains('show')) {
+                if (!mobileMenuContainer.contains(event.target)) {
+                    mobileMenu.classList.remove('show');
+                }
+            }
+        });
+
+        let requestCheckInterval;
+        
+        function startRequestPolling() {
+            requestCheckInterval = setInterval(checkForVideoCallRequests, 3000); // Check every 3 seconds
+        }
+        
+        function checkForVideoCallRequests() {
+            fetch('/doctor/getPendingVideoCallRequests')
+            .then(response => response.json())
+            .then(requests => {
+                updateRequestsDisplay(requests);
+            })
+            .catch(error => {
+                console.error('Error checking for video call requests:', error);
+            });
+        }
+        
+        function updateRequestsDisplay(requests) {
+            const requestsList = document.getElementById('requestsList');
+            const requestsCount = document.getElementById('requestsCount');
+            
+            requestsCount.textContent = requests.length;
+            
+            if (requests.length === 0) {
+                requestsList.innerHTML = `
+                    <div class="no-requests">
+                        <i class="fas fa-user-clock"></i>
+                        <h6>No pending requests</h6>
+                        <p>When patients request video calls, they will appear here.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            requestsList.innerHTML = '';
+            
+            requests.forEach(request => {
+                const requestCard = document.createElement('div');
+                requestCard.className = 'request-card';
+                requestCard.innerHTML = `
+                    <div class="request-header">
+                        <div class="patient-info">
+                            <div class="patient-avatar">
+                                ${request.userName.charAt(0).toUpperCase()}
+                            </div>
+                            <div class="patient-details">
+                                <h6>${request.userName}</h6>
+                                <p><i class="fas fa-envelope me-1"></i>${request.userEmail}</p>
+                            </div>
+                        </div>
+                        <div class="request-time">
+                            <i class="fas fa-clock me-1"></i>
+                            ${new Date(request.requestTime).toLocaleTimeString()}
+                        </div>
+                    </div>
+                    <div class="request-actions">
+                        <button class="btn btn-accept" onclick="acceptVideoCallRequest('${request.id}')">
+                            <i class="fas fa-check me-1"></i>Accept Call
+                        </button>
+                        <button class="btn btn-reject" onclick="rejectVideoCallRequest('${request.id}')">
+                            <i class="fas fa-times me-1"></i>Reject
+                        </button>
+                    </div>
+                `;
+                requestsList.appendChild(requestCard);
+            });
+        }
+        
+        function acceptVideoCallRequest(requestId) {
+            fetch('/doctor/acceptVideoCallRequest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `requestId=${requestId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('Video call request accepted! Starting call...', 'success');
+                    
+                    // Join the video call
+                    setTimeout(() => {
+                        window.location.href = `/doctor/joinVideoCall?roomId=${data.roomId}&userName=${encodeURIComponent(data.userName)}`;
+                    }, 2000);
+                } else {
+                    showNotification(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                showNotification('Error accepting request', 'error');
+            });
+        }
+        
+        function rejectVideoCallRequest(requestId) {
+            fetch('/doctor/rejectVideoCallRequest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `requestId=${requestId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('Video call request rejected', 'info');
+                    // Refresh the requests list
+                    checkForVideoCallRequests();
+                } else {
+                    showNotification(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                showNotification('Error rejecting request', 'error');
+            });
+        }
+        
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show notification`;
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 5000);
+        }
+        
+        // Start polling for video call requests when page loads
+        window.addEventListener('load', function() {
+            startRequestPolling();
+        });
+        
+        // Clean up interval when page is unloaded
+        window.addEventListener('beforeunload', function() {
+            if (requestCheckInterval) {
+                clearInterval(requestCheckInterval);
+            }
+        });
+    </script>
+</body>
+</html>

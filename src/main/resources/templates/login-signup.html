@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Signup - Medicare</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Modern Bootstrap Navbar */
+        .navbar {
+            position: fixed;
+            top: 15px;
+            left: 0; right: 0;
+            margin: 0 auto;
+            width: 98vw;
+            background: #fff;
+            border-radius: 2.5rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            transition: all 0.25s cubic-bezier(.4,0,.2,1);
+            z-index: 1000;
+            padding: 0.7rem 1.5rem;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            text-decoration: none;
+        }
+
+        .navbar-brand svg {
+            width: 36px; 
+            height: 36px;
+            transition: width 0.18s, height 0.18s;
+        }
+
+        .navbar-brand .brand-text {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #3d2176;
+            letter-spacing: 1px;
+            transition: font-size 0.18s;
+        }
+
+        /* Desktop Navigation */
+        .desktop-nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-left: auto;
+        }
+
+        .desktop-nav .btn {
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 1.08rem;
+            padding: 0.45rem 1.3rem;
+            border: none;
+            transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.18s, font-size 0.18s, padding 0.18s;
+            box-shadow: 0 2px 8px rgba(124,77,255,0.08);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-register {
+            background: #7c4dff;
+            color: #fff;
+            border: 2px solid #7c4dff;
+        }
+
+        .btn-register:hover, .btn-register:focus {
+            background: #5f36d6;
+            color: #fff;
+            border-color: #5f36d6;
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 4px 16px rgba(124,77,255,0.18);
+        }
+
+        /* Mobile Menu Container */
+        .mobile-menu-container {
+            display: none;
+            position: relative;
+        }
+
+        .navbar-toggler {
+            border: none;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.18s;
+            background: transparent;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
+            background-color: #f8f9fa;
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(61, 33, 118, 0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+            width: 24px;
+            height: 24px;
+            display: block;
+        }
+
+        /* Mobile Dropdown Menu */
+        .mobile-menu-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            padding: 1rem;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            margin-top: 0.5rem;
+        }
+
+        .mobile-menu-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .mobile-menu-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            text-decoration: none;
+            color: #3d2176;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .mobile-menu-item:hover {
+            background: #f3f0ff;
+            color: #7c4dff;
+            transform: translateX(5px);
+        }
+
+
+
+        /* Responsive Design */
+        @media (max-width: 991px) {
+            .navbar { 
+                max-width: 98vw; 
+                padding: 0.5rem 1rem; 
+            }
+            
+            .desktop-nav {
+                display: none;
+            }
+            
+            .mobile-menu-container {
+                display: block;
+            }
+        }
+
+        /* Main Content */
+        .main-content {
+            padding-top: 120px;
+            min-height: 100vh;
+            display: flex;
+            align-items: stretch;
+        }
+
+        .split-container {
+            display: flex;
+            width: 100%;
+            min-height: calc(100vh - 120px);
+        }
+
+        .image-section {
+            flex: 1;
+            background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.1)), 
+                        url('https://images.pexels.com/photos/4386466/pexels-photo-4386466.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1') center center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(45, 55, 72, 0.7), rgba(74, 85, 104, 0.5));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+
+        .image-content {
+            max-width: 80%;
+        }
+
+        .image-content h2 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+            letter-spacing: 1px;
+            color: #ffffff;
+        }
+
+        .image-content p {
+            font-size: 1.5rem;
+            font-weight: 500;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            color: #f7fafc;
+        }
+
+        .image-content .highlight {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 2rem;
+            border-radius: 2rem;
+            display: inline-block;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .form-section-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            background: #ffffff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-section-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(237, 242, 247, 0.8) 0%, rgba(247, 250, 252, 0.4) 100%);
+            z-index: 1;
+        }
+
+        .auth-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.05);
+            padding: 3.5rem;
+            width: 100%;
+            max-width: 550px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            position: relative;
+            z-index: 2;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .auth-header h2 {
+            color: #2d3748;
+            font-weight: 800;
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .auth-header p {
+            color: #718096;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .tab-buttons {
+            display: flex;
+            background: #f7fafc;
+            border-radius: 1.5rem;
+            padding: 0.4rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 1rem 2rem;
+            border: none;
+            background: transparent;
+            color: #718096;
+            font-weight: 700;
+            border-radius: 1.2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .tab-btn.active {
+            background: #2d3748;
+            color: white;
+            box-shadow: 0 4px 15px rgba(45, 55, 72, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.8rem;
+            color: #2d3748;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 1.2rem;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #2d3748;
+            box-shadow: 0 0 0 3px rgba(45, 55, 72, 0.1), 0 4px 15px rgba(45, 55, 72, 0.1);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 1.3rem;
+            background: #2d3748;
+            border: none;
+            border-radius: 1.2rem;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(45, 55, 72, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: #1a202c;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(45, 55, 72, 0.3);
+        }
+
+        .social-login {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .social-login p {
+            color: #718096;
+            margin-bottom: 1.5rem;
+            position: relative;
+            font-weight: 600;
+        }
+
+        .social-login p::before,
+        .social-login p::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 25%;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .social-login p::before {
+            left: 0;
+        }
+
+        .social-login p::after {
+            right: 0;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 1.2rem;
+            justify-content: center;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 1.2rem;
+            background: white;
+            color: #718096;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            transition: all 0.3s ease;
+            max-width: 180px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .social-btn:hover {
+            border-color: #2d3748;
+            color: #2d3748;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(45, 55, 72, 0.1);
+        }
+
+        .social-btn.google:hover {
+            border-color: #db4437;
+            color: #db4437;
+            box-shadow: 0 4px 15px rgba(219, 68, 55, 0.1);
+        }
+
+        .social-btn.facebook:hover {
+            border-color: #4267B2;
+            color: #4267B2;
+            box-shadow: 0 4px 15px rgba(66, 103, 178, 0.1);
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .form-footer.forgot-password {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-footer a {
+            color: #2d3748;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .form-footer a:hover {
+            color: #1a202c;
+            text-decoration: underline;
+        }
+
+        .switch-form {
+            text-align: center;
+            margin-top: 2rem;
+            color: #2d3748;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            padding: 1rem;
+            border-radius: 1rem;
+            background: rgba(45, 55, 72, 0.05);
+        }
+
+        .switch-form:hover {
+            background: rgba(45, 55, 72, 0.1);
+            color: #1a202c;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        /* Error Message Styling */
+        .alert {
+            border-radius: 1rem;
+            border: none;
+            box-shadow: 0 4px 20px rgba(220, 53, 69, 0.15);
+            font-weight: 500;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+        }
+
+        .alert .btn-close {
+            filter: invert(1);
+        }
+
+                @media (max-width: 768px) {
+            .navbar {
+                padding: 0.5rem 1rem;
+            }
+            
+            .navbar-brand .brand-text {
+                font-size: 1.4rem;
+            }
+            
+            .navbar-brand svg {
+                width: 28px;
+                height: 28px;
+            }
+            
+            .desktop-nav {
+                display: none;
+            }
+            
+            .mobile-menu-container {
+                display: block;
+            }
+            
+            .navbar-toggler {
+                border: none;
+                padding: 0.5rem;
+                border-radius: 0.5rem;
+                transition: background-color 0.18s;
+                background: transparent;
+            }
+
+            .navbar-toggler:focus {
+                box-shadow: none;
+                background-color: #f8f9fa;
+            }
+
+            .navbar-toggler-icon {
+                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(61, 33, 118, 0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+                width: 24px;
+                height: 24px;
+                display: block;
+            }
+
+            /* Mobile Dropdown Menu */
+            .mobile-menu-dropdown {
+                position: absolute;
+                top: 100%;
+                right: 0;
+                background: #fff;
+                border-radius: 1rem;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+                padding: 1rem;
+                min-width: 200px;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-10px);
+                transition: all 0.3s ease;
+                z-index: 1001;
+                margin-top: 0.5rem;
+            }
+
+            .mobile-menu-dropdown.show {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+            .mobile-menu-content {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .mobile-menu-item {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                padding: 0.75rem 1rem;
+                border-radius: 0.75rem;
+                text-decoration: none;
+                color: #3d2176;
+                font-weight: 500;
+                transition: all 0.2s ease;
+                background: transparent;
+                border: none;
+                width: 100%;
+                text-align: left;
+            }
+
+            .mobile-menu-item:hover {
+                background: #f3f0ff;
+                color: #7c4dff;
+                transform: translateX(5px);
+            }
+
+            .mobile-menu-item i {
+                font-size: 1.1rem;
+                width: 20px;
+                text-align: center;
+            }
+            
+            .main-content {
+                padding-top: 80px;
+                overflow: hidden;
+            }
+            
+            .split-container {
+                flex-direction: column;
+                height: auto;
+                min-height: auto;
+            }
+            
+            .image-section {
+                height: 40vh;
+                min-height: 40vh;
+                max-height: 40vh;
+            }
+            
+            .form-section-container {
+                height: auto;
+                min-height: auto;
+                max-height: none;
+                padding: 1rem;
+                overflow: visible;
+                display: block;
+            }
+            
+            .auth-container {
+                margin: 0;
+                padding: 2rem;
+                max-height: none;
+                width: 100%;
+                max-width: 100%;
+            }
+            
+            .auth-header h2 {
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .auth-header p {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+            }
+            
+            .tab-buttons {
+                margin-bottom: 2rem;
+            }
+            
+            .tab-btn {
+                padding: 1rem 2rem;
+                font-size: 1rem;
+            }
+            
+            .form-group {
+                margin-bottom: 2rem;
+            }
+            
+            .social-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .social-btn {
+                max-width: none;
+                padding: 1rem;
+                font-size: 1rem;
+            }
+            
+            .image-content h2 {
+                font-size: 2rem;
+            }
+            
+            .image-content p {
+                font-size: 1.1rem;
+            }
+            
+            .form-control {
+                padding: 1rem 1.5rem;
+                font-size: 1rem;
+            }
+            
+            .btn-primary {
+                padding: 1rem;
+                font-size: 1.1rem;
+                margin-bottom: 2rem;
+            }
+            
+            .social-login {
+                margin-bottom: 2rem;
+            }
+            
+            .social-login p {
+                margin-bottom: 1.5rem;
+                font-size: 1rem;
+            }
+            
+            .form-footer {
+                margin-top: 2rem;
+            }
+            
+            .form-footer p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding-top: 70px;
+                overflow: hidden;
+            }
+            
+            .split-container {
+                height: auto;
+                min-height: auto;
+            }
+            
+            .image-section {
+                height: 35vh;
+                min-height: 35vh;
+                max-height: 35vh;
+            }
+            
+            .form-section-container {
+                height: auto;
+                min-height: auto;
+                max-height: none;
+                padding: 0.5rem;
+                overflow: visible;
+                display: block;
+            }
+            
+            .auth-container {
+                margin: 0;
+                padding: 1.5rem;
+                width: 100%;
+                max-width: 100%;
+            }
+            
+            .auth-header h2 {
+                font-size: 1.8rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .auth-header p {
+                font-size: 0.9rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .tab-buttons {
+                margin-bottom: 1.5rem;
+            }
+            
+            .tab-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+            }
+            
+            .form-group {
+                margin-bottom: 1.5rem;
+            }
+            
+            .form-control {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .btn-primary {
+                padding: 0.8rem;
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .social-login {
+                margin-bottom: 1.5rem;
+            }
+            
+            .social-login p {
+                margin-bottom: 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .social-buttons {
+                gap: 0.8rem;
+            }
+            
+            .social-btn {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+            
+            .form-footer {
+                margin-top: 1.5rem;
+            }
+            
+            .form-footer p {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Footer Styling */
+        .footer {
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 1.5rem 0;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-brand svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .footer-brand span {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #7c4dff;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .footer-links a {
+            color: #a0aec0;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #7c4dff;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .footer-social a {
+            color: #a0aec0;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-social a:hover {
+            color: #7c4dff;
+            background: rgba(124, 77, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .footer-links {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .footer-social {
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Modern Bootstrap Navbar -->
+    <nav class="navbar navbar-expand-lg" id="navbar">
+        <div class="container-fluid">
+            <!-- Brand/Logo -->
+            <a class="navbar-brand" href="/">
+                <svg viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="20" fill="#7c4dff"/>
+                    <path d="M20 10v20M10 20h20" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+                </svg>
+                <span class="brand-text">medicare</span>
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <div class="navbar-nav desktop-nav">
+                <!-- Action Buttons -->
+                <a href="/" class="btn btn-register">
+                    <i class="fas fa-home me-2"></i>Home
+                </a>
+            </div>
+            
+            <!-- Mobile Dropdown Menu -->
+            <div class="mobile-menu-container">
+                <button class="navbar-toggler" type="button" onclick="toggleMobileMenu()" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="mobile-menu-dropdown" id="mobileMenu">
+                    <div class="mobile-menu-content">
+                        <a href="/" class="mobile-menu-item">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <!-- Error Message Display -->
+        <div class="container text-center" style="position: fixed; top: 100px; left: 50%; transform: translateX(-50%); z-index: 1001;">
+            <div th:if="${msg!=null}" class="alert alert-danger alert-dismissible fade show" role="alert" style="max-width: 400px;">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <span th:text="${msg}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <div class="split-container">
+            <!-- Left Half - Image Section -->
+            <div class="image-section">
+                <div class="image-overlay">
+                    <div class="image-content">
+                        <h2>Your Health Journey Starts Here</h2>
+                        <p>Connect with trusted healthcare professionals and get the care you deserve</p>
+                        <div class="highlight">
+                            <i class="fas fa-heartbeat me-2"></i>24/7 Care Available
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Half - Form Section -->
+            <div class="form-section-container" id="login-signup-form">
+                <!-- User Login/Register Container -->
+                <div id="User" class="auth-container">
+                    <div class="auth-header">
+                        <h2 id="form-title">User Login</h2>
+                        <p>Sign in to your account</p>
+                    </div>
+
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" id="userlogp" onclick="userlog()">Login</button>
+                        <button class="tab-btn" id="userresp" onclick="userres()">Register</button>
+                    </div>
+
+                    <!-- User Login Form -->
+                    <div id="user-log" class="form-section active">
+                        <form th:action="@{/user/login}" method="post">
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control" placeholder="Email" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Password</label>
+                                <input type="password" name="password" class="form-control" placeholder="Password" required>
+                            </div>
+                            <div class="form-footer forgot-password">
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#userForgetPassword" class="text-decoration-none">Forgot Password?</a>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </button>
+                        </form>
+
+                        <div class="social-login">
+                            <p>Or continue with</p>
+                            <div class="social-buttons">
+                                <a class="google-login-btn social-btn google" href="/oauth2/role/google?role=user">
+                                    <i class="fab fa-google"></i> Google
+                                </a>
+                                <a th:href="@{/oauth2/authorization/facebook}" class="social-btn facebook">
+                                    <i class="fab fa-facebook-f"></i> Facebook
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="form-footer">
+                            <p>Don't have an account? <a href="#" onclick="userres()">Sign up</a></p>
+                        </div>
+                    </div>
+
+                    <!-- User Register Form -->
+                    <div id="user-res" class="form-section">
+                        <form th:action="@{/user/register}" method="post">
+                            <div class="form-group">
+                                <label class="form-label">Name</label>
+                                <input type="text" name="name" class="form-control" placeholder="Name" maxlength="100" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control" placeholder="Email" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Password</label>
+                                <input type="password" name="password" class="form-control" placeholder="Password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-user-plus me-2"></i>Sign up
+                            </button>
+                        </form>
+
+                        <div class="social-login">
+                            <p>Or continue with</p>
+                            <div class="social-buttons">
+                                <a class="google-login-btn social-btn google" href="/oauth2/role/google?role=user">
+                                    <i class="fab fa-google"></i> Google
+                                </a>
+                                <a th:href="@{/oauth2/authorization/facebook}" class="social-btn facebook">
+                                    <i class="fab fa-facebook-f"></i> Facebook
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="form-footer">
+                            <p>Already have an account? <a href="#" onclick="userlog()">Login</a></p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Doctor Login/Register Container -->
+                <div id="Doctor" class="auth-container" style="display: none;">
+                    <div class="auth-header">
+                        <h2 id="form-title">Doctor Login</h2>
+                        <p>Sign in to your account</p>
+                    </div>
+
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" id="Doclogp" onclick="Doclog()">Login</button>
+                        <button class="tab-btn" id="Docresp" onclick="Docres()">Register</button>
+                    </div>
+
+                    <!-- Doctor Login Form -->
+                    <div id="Doc-log" class="form-section active">
+                        <form th:action="@{/doctor/login}" method="post">
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control" placeholder="Email" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Password</label>
+                                <input type="password" name="password" class="form-control" placeholder="Password" required>
+                            </div>
+                            <div class="form-footer forgot-password">
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#doctorForgetPassword" class="text-decoration-none">Forgot Password?</a>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </button>
+                        </form>
+
+                        <div class="social-login">
+                            <p>Or continue with</p>
+                            <div class="social-buttons">
+                                <a class="google-login-btn social-btn google" href="/oauth2/role/google?role=doctor">
+                                    <i class="fab fa-google"></i> Google
+                                </a>
+                                <a th:href="@{/oauth2/authorization/facebook}" class="social-btn facebook">
+                                    <i class="fab fa-facebook-f"></i> Facebook
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="form-footer">
+                            <p>Don't have an account? <a href="#" onclick="Docres()">Sign up</a></p>
+                        </div>
+                    </div>
+
+                    <!-- Doctor Register Form -->
+                    <div id="Doc-res" class="form-section">
+                        <form th:action="@{/doctor/register}" method="post">
+                            <div class="form-group">
+                                <label class="form-label">Name</label>
+                                <input type="text" name="name" class="form-control" placeholder="Name" pattern="[a-zA-Z ]+" maxlength="50" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control" placeholder="Email" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Password</label>
+                                <input type="password" name="password" class="form-control" placeholder="Password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-user-plus me-2"></i>Sign up
+                            </button>
+                        </form>
+
+                        <div class="social-login">
+                            <p>Or continue with</p>
+                            <div class="social-buttons">
+                                <a class="google-login-btn social-btn google" href="/oauth2/role/google?role=doctor">
+                                    <i class="fab fa-google"></i> Google
+                                </a>
+                                <a th:href="@{/oauth2/authorization/facebook}" class="social-btn facebook">
+                                    <i class="fab fa-facebook-f"></i> Facebook
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="form-footer">
+                            <p>Already have an account? <a href="#" onclick="Doclog()">Login</a></p>
+                        </div>
+                    </div>
+
+                    <p class="switch-form" onclick="User(); document.getElementById('login-signup-form').scrollIntoView({behavior: 'smooth'});">Click here to join as User</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <svg viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="20" fill="#7c4dff"/>
+                    <path d="M20 10v20M10 20h20" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+                </svg>
+                <span>medicare</span>
+            </div>
+            
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="#">About</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact</a>
+            </div>
+            
+            <div class="footer-social">
+                <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- User Forget Password Modal -->
+    <div class="modal fade" id="userForgetPassword" tabindex="-1" aria-labelledby="userForgetPasswordLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userForgetPasswordLabel">Forget Password</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/user/forgetPassword}" method="post">
+                        <div class="form-group">
+                            <label class="form-label">User-Id:</label>
+                            <input type="email" name="email" class="form-control" placeholder="UserId" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Doctor Forget Password Modal -->
+    <div class="modal fade" id="doctorForgetPassword" tabindex="-1" aria-labelledby="doctorForgetPasswordLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="doctorForgetPasswordLabel">Forget Password</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/doctor/forgetPassword}" method="post">
+                        <div class="form-group">
+                            <label class="form-label">Doctor-Id:</label>
+                            <input type="email" name="email" class="form-control" placeholder="DoctorId" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle function
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('show');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuContainer = document.querySelector('.mobile-menu-container');
+            
+            if (mobileMenu && mobileMenu.classList.contains('show')) {
+                if (!mobileMenuContainer.contains(event.target)) {
+                    mobileMenu.classList.remove('show');
+                }
+            }
+        });
+
+        // User form switching
+        const userLog = document.getElementById('user-log');
+        const userRes = document.getElementById('user-res');
+        const userlogp = document.getElementById('userlogp');
+        const userresp = document.getElementById('userresp');
+
+        function userlog() {
+            userLog.classList.add('active');
+            userRes.classList.remove('active');
+            userlogp.classList.add('active');
+            userresp.classList.remove('active');
+            document.getElementById('form-title').textContent = 'User Login';
+        }
+
+        function userres() {
+            userLog.classList.remove('active');
+            userRes.classList.add('active');
+            userresp.classList.add('active');
+            userlogp.classList.remove('active');
+            document.getElementById('form-title').textContent = 'User Register';
+        }
+
+        // Doctor form switching
+        const DocLog = document.getElementById('Doc-log');
+        const DocRes = document.getElementById('Doc-res');
+        const Doclogp = document.getElementById('Doclogp');
+        const Docresp = document.getElementById('Docresp');
+
+        function Doclog() {
+            DocLog.classList.add('active');
+            DocRes.classList.remove('active');
+            Doclogp.classList.add('active');
+            Docresp.classList.remove('active');
+            document.getElementById('form-title').textContent = 'Doctor Login';
+        }
+
+        function Docres() {
+            DocLog.classList.remove('active');
+            DocRes.classList.add('active');
+            Docresp.classList.add('active');
+            Doclogp.classList.remove('active');
+            document.getElementById('form-title').textContent = 'Doctor Register';
+        }
+
+        function setGoogleLoginRole(role) {
+            document.querySelectorAll('.google-login-btn').forEach(function(btn) {
+                btn.setAttribute('href', '/oauth2/role/google?role=' + role);
+            });
+        }
+
+        // User/Doctor form switching
+        const user = document.getElementById("User");
+        const doctor = document.getElementById("Doctor");
+
+        function User() {
+            doctor.style.display = "none";
+            user.style.display = "block";
+            setGoogleLoginRole('user');
+        }
+
+        function Doctor() {
+            user.style.display = "none";
+            doctor.style.display = "block";
+            setGoogleLoginRole('doctor');
+        }
+
+        // Auto-dismiss error messages
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }, 5000); // Auto-dismiss after 5 seconds
+            });
+        });
+
+        // Show doctor form if ?doctor=1 is in the URL
+        // (function() {
+        //     const params = new URLSearchParams(window.location.search);
+        //     if (params.get('doctor') === '1') {
+        //         Doctor();
+        //         document.getElementById('login-signup-form').scrollIntoView({behavior: 'smooth'});
+        //     }
+        // })();
+
+        // Keyboard shortcut: Ctrl+Shift+A to show doctor login
+        window.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+                Doctor();
+                document.getElementById('login-signup-form').scrollIntoView({behavior: 'smooth'});
+            }
+        });
+    </script>
+
+    <!-- Browser Notification Script -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+         let message = /*[[${session.message}]]*/ '';
+        
+        if (message !== null && message !== 'null') {
+            if (Notification.permission === "granted") {
+                new Notification(message);
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        new Notification(message);
+                    }
+                });
+            }
+        }
+        /*]]>*/
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
